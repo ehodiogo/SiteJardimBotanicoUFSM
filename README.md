@@ -1,4 +1,36 @@
-# SiteJardimBotanicoUFSM
-Site para Atividade de Extensão da Universidade Federal de Santa Maria, sendo solicitado a criação de um site para mostrar dados das plantas/animais que estão no Jardim Botânico.
+Checkpoint 1 (15/abr)
+ 
+Texto do Projeto (a ser registrado como extensão).
 
-# Miro [https://miro.com/welcomeonboard/dUdZaU01UjlDSVJ1YTFnQWdWa1NDRTZPeG1TcEYrR2xVOHZOY1NaUWRkWTMzMFVUcnIrMUl5dU43bkNidWdKVTFzR2NVYTlsSjlQUmRZQkF3M3BPMFY1RTlCYVEvMVZQbDFCS1ZNR0t1ZzhydUdwTUFjY0Zicmg0WVhselltemN0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=145618594993]
+Checkpoint 2 (13/mai)
+ 
+Update do projeto &
+Codificação do sistema. Protótipo inicial.
+Relatório do projeto (parcial).
+
+Checkpoint 3 (03/jun)
+ 
+Update do projeto &
+Codificação do sistema. Protótipo #2
+Relatório do projeto (parcial) com descrição da arquitetura do
+sistema.
+
+Checkpoint 4 (08/jul)
+ 
+Sistema implementado e funcional.
+Apresentação do Sistema.
+Relatório do projeto (técnico)
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Funcionalidades MVP:
+
+Dados das plantas/fungos
+Dados dos animais
+Possibilidade de acesso ao site com leitura de um QRCode direto pela câmera do celular
+
+Funcionalidades "Diferenciais":
+Geração faciltiada de um QRCode para ser impresso
+Facilidade de cadastro de novas plantas/fungos ou animais
+X
+Y
+Z
