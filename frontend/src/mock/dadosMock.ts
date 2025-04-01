@@ -1,7 +1,5 @@
 import DadosCientificos from "../types/DadosCientificos";
-import Planta from "../types/Planta";
-import Fungo from "../types/Fungo";
-import Animal from "../types/Animal";
+import Ser from "../types/Ser";
 
 const dadosCientificosPlanta: DadosCientificos = {
   id: "1",
@@ -39,7 +37,7 @@ const dadosCientificosAnimal: DadosCientificos = {
   especie: "P. leo"
 };
 
-const plantas: Planta[] = [
+const seres: Ser[] = [
   {
     id: "1",
     nome: "Rosa",
@@ -47,7 +45,8 @@ const plantas: Planta[] = [
     descricao: "Uma planta ornamental, muito apreciada por sua beleza e aroma.",
     descricaoAcessivel: "A rosa é uma flor que tem pétalas de cores variadas, como vermelho, branco e rosa. Ela tem um perfume doce e é comumente usada em buquês e jardins. Suas folhas são verdes e as flores são em forma de círculo com várias pétalas.",
     foto: "https://example.com/rosa.jpg",
-    dadosCientificos: dadosCientificosPlanta
+    dadosCientificos: dadosCientificosPlanta,
+    type: "Planta",
   },
   {
     id: "2",
@@ -56,18 +55,17 @@ const plantas: Planta[] = [
     descricao: "Planta adaptada a ambientes secos, com espinhos ao invés de folhas.",
     descricaoAcessivel: "O cacto é uma planta que vive em locais secos e quentes. Em vez de folhas, ele tem espinhos que ajudam a proteger e conservar água. Sua superfície pode ser verde e é coberta por espinhos afiados.",
     foto: "https://example.com/cacto.jpg",
-    dadosCientificos: dadosCientificosPlanta
-  }
-];
-
-const fungos: Fungo[] = [
+    dadosCientificos: dadosCientificosPlanta,
+    type: "Planta",
+  },
   {
     id: "1",
     nome: "Cogumelo Paris",
     descricao: "Fungo comestível, bastante utilizado na culinária.",
     descricaoAcessivel: "O cogumelo Paris tem uma cabeça redonda e lisa, de cor branca, com um caule também branco. Ele cresce em terrenos úmidos e é comumente usado em pratos como saladas e sopas.",
     foto: "https://example.com/cogumelo.jpg",
-    dadosCientificos: dadosCientificosFungo
+    dadosCientificos: dadosCientificosFungo,
+    type: "Fungo"
   },
   {
     id: "2",
@@ -75,18 +73,17 @@ const fungos: Fungo[] = [
     descricao: "Fungo medicinal e comestível, originário da Ásia.",
     descricaoAcessivel: "O shiitake tem uma cabeça marrom escura, com um formato arredondado e uma textura suave. Ele é muito usado na culinária asiática e é conhecido por suas propriedades medicinais.",
     foto: "https://example.com/shiitake.jpg",
-    dadosCientificos: dadosCientificosFungo
-  }
-];
-
-const animais: Animal[] = [
+    dadosCientificos: dadosCientificosFungo,
+    type: "Fungo"
+  },
   {
     id: "1",
     nome: "Leão",
     descricao: "Um dos maiores felinos, conhecido por sua força e posição no topo da cadeia alimentar.",
     descricaoAcessivel: "O leão é um grande felino com uma juba característica que envolve sua cabeça. Ele tem um corpo musculoso e é de cor dourada. O leão é conhecido por ser um predador de topo nas savanas africanas.",
     foto: "https://example.com/leao.jpg",
-    dadosCientificos: dadosCientificosAnimal
+    dadosCientificos: dadosCientificosAnimal,
+    type: "Animal"
   },
   {
     id: "2",
@@ -94,8 +91,9 @@ const animais: Animal[] = [
     descricao: "O maior animal terrestre, conhecido por sua memória e habilidades sociais.",
     descricaoAcessivel: "O elefante é um grande mamífero com pele cinza e grandes orelhas. Ele tem um tronco longo e pode pesar várias toneladas. Conhecido por sua inteligência, os elefantes vivem em grupos e são muito sociais.",
     foto: "https://example.com/elefante.jpg",
-    dadosCientificos: dadosCientificosAnimal
+    dadosCientificos: dadosCientificosAnimal,
+    type: "Animal"
   }
 ];
 
-export { plantas, fungos, animais };
+export { seres };
