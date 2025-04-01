@@ -8,6 +8,8 @@ interface ItemProps {
   dadosCientificos: {
     nomeCientifico: string;
   };
+  type: string;
+  grupo?: string;
 }
 
 function CardAmostragem({ item }: { item: ItemProps }) {
@@ -24,6 +26,9 @@ function CardAmostragem({ item }: { item: ItemProps }) {
         <p className="card-text text-muted" style={{ fontStyle: "italic" }}>{item.descricao}</p>
         <p className="card-text">
           <strong className="text-primary">Nome Científico:</strong> <span className="text-secondary">{item.dadosCientificos.nomeCientifico}</span>
+          {item.grupo && (
+            <a>Grupo: {item.grupo}</a>
+          )}
         </p>
         <button className="btn btn-success btn-sm mt-2" onClick={() => lerTextoEmVozAlto(item.descricaoAcessivel)}>
           🌿 Ouvir Descrição
