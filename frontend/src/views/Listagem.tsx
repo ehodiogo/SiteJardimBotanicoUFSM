@@ -1,10 +1,10 @@
-import { seres } from "../mock/dadosMock";
-import CardAmostragem from "../components/CardSer";
 import { useState } from "react";
+import CardAmostragem from "../components/CardSer";
+import Ser from "../types/Ser";
+import seres from "../mock/dadosMock";
 
 function Listagem() {
   const [filtros, setFiltros] = useState<string[]>([]);
-  
   const tipos: string[] = ["Planta", "Animal", "Fungo"];
 
   const toggleFiltro = (tipo: string) => {
@@ -15,26 +15,20 @@ function Listagem() {
     );
   };
 
-  const seresFiltrados = filtros.length === 0 ? seres : seres.filter(ser => filtros.includes(ser.type));
+  const seresFiltrados = filtros.length === 0 
+    ? seres.seres 
+    : seres.seres.filter((ser: Ser) => filtros.includes(ser.type));
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Listagem de Dados</h1>
+    <div className="container py-4 text-center">
+      <h1 className="fw-bold text-success">Listagem de Dados</h1>
 
-      <div style={{ marginBottom: "20px" }}>
+      <div className="d-flex flex-wrap justify-content-center gap-2 my-3">
         {tipos.map((tipo) => (
           <button
             key={tipo}
             onClick={() => toggleFiltro(tipo)}
-            style={{ 
-              margin: "5px", 
-              padding: "10px", 
-              backgroundColor: filtros.includes(tipo) ? "#b03a2e" : "#ddd", 
-              color: filtros.includes(tipo) ? "white" : "black",
-              border: "none",
-              cursor: "pointer",
-              borderRadius: "5px"
-            }}
+            className={`btn ${filtros.includes(tipo) ? "btn-danger" : "btn-outline-success"}`}
           >
             {tipo}
           </button>
@@ -42,11 +36,15 @@ function Listagem() {
       </div>
 
       <section>
-        <h2>Seres</h2>
-        <p>Filtrando por: <strong>{filtros.length > 0 ? filtros.join(", ") : "Todos"}</strong></p>
-        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-          {seresFiltrados.map((ser) => (
-            <CardAmostragem key={ser.nome + ser.id} item={ser} />
+        <h2 className="h4">Seres</h2>
+        <p>
+          Filtrando por: <strong>{filtros.length > 0 ? filtros.join(", ") : "Todos"}</strong>
+        </p>
+        <div className="row justify-content-center row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
+          {seresFiltrados.map((ser: Ser) => (
+            <div key={ser.nome + ser.id} className="col d-flex justify-content-center">
+              <CardAmostragem item={ser} />
+            </div>
           ))}
         </div>
       </section>

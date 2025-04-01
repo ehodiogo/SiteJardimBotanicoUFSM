@@ -27,11 +27,14 @@ function CardAmostragem({ item }: { item: ItemProps }) {
         <p className="card-text">
           <strong className="text-primary">Nome Científico:</strong> <span className="text-secondary">{item.dadosCientificos.nomeCientifico}</span>
           {item.grupo && (
-            <a>Grupo: {item.grupo}</a>
+            <p className="fw-light"> Grupo: <a className="fw-bold text-decoration-none text-success">{item.grupo}</a></p>
           )}
         </p>
         <button className="btn btn-success btn-sm mt-2" onClick={() => lerTextoEmVozAlto(item.descricaoAcessivel)}>
           🌿 Ouvir Descrição
+        </button>
+        <button className="btn btn-info btn-sm mt-2">
+          Ver mais informações
         </button>
       </div>
     </div>
