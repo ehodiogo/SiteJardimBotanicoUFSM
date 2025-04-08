@@ -1,0 +1,18 @@
+.sidebar-item {
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-item:hover {
+  background-color: #e8f7f3;
+  color: #01c061 !important;
+}
+
+.sidebar-item .ps-menu-icon {
+  transition: transform 0.2s ease;
+}
+
+.sidebar-item:hover .ps-menu-icon {
+  transform: scale(1.1);
+}
