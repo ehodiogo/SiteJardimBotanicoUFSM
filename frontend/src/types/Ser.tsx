@@ -1,4 +1,5 @@
 import DadosCientificos from "./DadosCientificos";
+import Funcionalidade from "./Funcionalidade";
 
 type Ser = {
     id: string;
@@ -9,6 +10,7 @@ type Ser = {
     descricaoAcessivel : string;
     type: string;
     grupo?: string;
+    funcionalidade?: Funcionalidade;
 }
 
 export default Ser;

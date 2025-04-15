@@ -7,6 +7,7 @@ import Sidebar from "./components/SideBar";
 // TODO: manter a importação de pages com lazy para que no build ele divida o código em partes menores
 const PageNotFound = lazy(() => import("./views/Erro404"));
 const Listagem = lazy(() => import("./views/Listagem"));
+const Trilha = lazy(() => import("./views/Trilha"));
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="" element={<h1>Home</h1>} />
           <Route path="*" element={<PageNotFound />} />
           <Route path="/listagem" element={<Listagem />} />
+          <Route path="/trilha" element={<Trilha />} />
         </Routes>
       </div>
     </Router>

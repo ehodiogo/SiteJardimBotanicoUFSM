@@ -1,4 +1,5 @@
 import DadosCientificos from "../types/DadosCientificos";
+import Funcionalidade from "../types/Funcionalidade";
 
 const dadosCientificosAnimais: DadosCientificos[] = [
   {
@@ -223,6 +224,169 @@ const dadosCientificosAnimais: DadosCientificos[] = [
   },
 ];
 
+const funcionalidades: Funcionalidade[] = [
+  {
+    id: 1,
+    tags: [
+      "CONTROLE INSETOS",
+      "VULNERÁVEL A PREDADORES",
+      "MANUTENÇÃO DO ECOSSISTEMA",
+    ],
+  },
+  {
+    id: 2,
+    tags: [
+      "CONTROLE INSETOS",
+      "ECOSSISTEMA DE FLORESTAS",
+      "ALIMENTAÇÃO DE INSETOS",
+    ],
+  },
+  {
+    id: 3,
+    tags: [
+      "CAÇADOR DE ROEDORES",
+      "ESPECIE DE PREDADOR",
+      "ALIMENTAÇÃO DE OUTROS ANIMAIS",
+    ],
+  },
+  {
+    id: 4,
+    tags: [
+      "AQUÁTICO",
+      "BIOLOGIA DE ÁGUA DOCE",
+      "PROTEÇÃO DE ECOSSISTEMAS AQUÁTICOS",
+    ],
+  },
+  {
+    id: 5,
+    tags: [
+      "PREDADOR DE PEQUENOS ANIMAIS",
+      "REGULAÇÃO DE POPULAÇÕES",
+      "IMPORTÂNCIA NA CÂMARA ALIMENTAR",
+    ],
+  },
+  {
+    id: 6,
+    tags: [
+      "COMUNICAÇÃO",
+      "ESPECIE AMEAÇADA",
+      "HÁBITOS SOCIAIS",
+    ],
+  },
+  {
+    id: 7,
+    tags: [
+      "ESCAVADOR",
+      "CONTROLADOR DE SOLO",
+      "ALIMENTAÇÃO DE VEGETAIS",
+    ],
+  },
+  {
+    id: 8,
+    tags: [
+      "PREDADOR DE ROEDORES",
+      "CONTROLADOR DE POPULAÇÕES",
+      "REGULAÇÃO ECOLÓGICA",
+    ],
+  },
+  {
+    id: 9,
+    tags: [
+      "CAÇADOR DE INSETOS",
+      "CONTROLADOR DE INFESTAÇÃO",
+      "NÍVEL DE ALIMENTAÇÃO",
+    ],
+  },
+  {
+    id: 10,
+    tags: [
+      "VENENOSA",
+      "PREDADOR",
+      "APLICAÇÃO MEDICINAL",
+    ],
+  },
+  {
+    id: 11,
+    tags: [
+      "ALUCINÓGENO",
+      "PESQUISA CIENTÍFICA",
+      "CULTURA POPULAR",
+    ],
+  },
+  {
+    id: 12,
+    tags: [
+      "DECOMPOSITOR",
+      "AJUDA NO CICLO DE NUTRIENTES",
+      "ASSOCIADO A MADEIRA",
+    ],
+  },
+  {
+    id: 13,
+    tags: [
+      "DECOMPOSITOR",
+      "CICLO DE NUTRIENTES",
+      "MADEIRA EM DECOMPOSIÇÃO",
+    ],
+  },
+  {
+    id: 14,
+    tags: [
+      "DECOMPOSITOR",
+      "ESPECIE RARA",
+      "CICLO DE NUTRIENTES",
+    ],
+  },
+  {
+    id: 15,
+    tags: [
+      "PAISAGISMO",
+      "ALIMENTAÇÃO DE ANIMAIS",
+      "FRUTOS COMESTÍVEIS",
+    ],
+  },
+  {
+    id: 16,
+    tags: [
+      "PAISAGISMO",
+      "ORNAMENTAL",
+      "ESTÉTICA",
+    ],
+  },
+  {
+    id: 17,
+    tags: [
+      "REFLORESTAMENTO",
+      "MADEIRA",
+      "CONSTRUÇÃO",
+    ],
+  },
+  {
+    id: 18,
+    tags: [
+      "ORNAMENTAL",
+      "ALIMENTO PARA FAUNA",
+      "PESQUISA ECOLOGICA",
+    ],
+  },
+  {
+    id: 19,
+    tags: [
+      "FRUTOS COMESTÍVEIS",
+      "ALIMENTO PARA FAUNA",
+      "UTILIZAÇÃO EM MEDICINA POPULAR",
+    ],
+  },
+  {
+    id: 20,
+    tags: [
+      "PLANTAS MEDICINAIS",
+      "CULTURA TRADICIONAL",
+      "CAATINGA",
+    ],
+  },
+];
+
 // TODO: COLOCAR MAIS FOTOS!!! FALTANTES NOS DADOS 
 
 const seres = {
@@ -235,7 +399,8 @@ const seres = {
       descricaoAcessivel: "O quero-quero é uma ave que tem penas brancas e pretas e é bastante barulhenta. Sua chamada pode ser ouvida à distância e é comum em áreas abertas.",
       foto: "/fotos/quero-quero.jpg",
       dadosCientificos: dadosCientificosAnimais[0],
-      type: "Animal"
+      type: "Animal",
+      funcionalidade: funcionalidades[0],
     },
     {
       id: "2",
@@ -446,5 +611,6 @@ const seres = {
     },
   ]
 };
+
 
 export default seres ;

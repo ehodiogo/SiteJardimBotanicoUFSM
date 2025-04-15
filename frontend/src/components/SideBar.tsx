@@ -2,9 +2,9 @@
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { HouseDoorFill, GearFill } from "react-bootstrap-icons";
+import { HouseDoorFill, PinMapFill } from "react-bootstrap-icons";
 import { FaLeaf } from "react-icons/fa";
-import sideBarLogo from "../../public/fotos/Jerivaldo.png";
+import sideBarLogo from "/fotos/Jerivaldo.png";
 import "../App.css";
 
 export default function MySidebar() {
@@ -58,11 +58,11 @@ export default function MySidebar() {
             Biodiversidade
           </MenuItem>
           <MenuItem
-            icon={<GearFill />}
-            component={<Link to="/configuracoes" />}
+            icon={<PinMapFill />}
+            component={<Link to="/trilha" />}
             className="sidebar-item"
           >
-            Configurações
+            Trilha
           </MenuItem>
         </Menu>
       </Sidebar>
