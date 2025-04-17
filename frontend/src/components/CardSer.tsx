@@ -1,6 +1,9 @@
 import lerTextoEmVozAlto from "../functions/Acessibilidade";
 
+import { useNavigate } from "react-router-dom";
+
 interface ItemProps {
+  id: string;
   foto: string;
   nome: string;
   descricao: string;
@@ -13,6 +16,8 @@ interface ItemProps {
 }
 
 function CardAmostragem({ item }: { item: ItemProps }) {
+  // inside the component:
+const navigate = useNavigate();
   return (
     <div className="card shadow-lg border-0" style={{ width: "20rem", backgroundColor: "#f4f9f4" }}>
       <img
@@ -33,7 +38,7 @@ function CardAmostragem({ item }: { item: ItemProps }) {
         <button className="btn btn-success btn-sm mt-2" onClick={() => lerTextoEmVozAlto(item.descricaoAcessivel)}>
           🌿 Ouvir Descrição
         </button>
-        <button className="btn btn-info btn-sm mt-2">
+        <button className="btn btn-info btn-sm mt-2" onClick={() => navigate(`/ListagemUnica/${item.nome}-${item.id}`)}>
           Ver mais informações
         </button>
       </div>

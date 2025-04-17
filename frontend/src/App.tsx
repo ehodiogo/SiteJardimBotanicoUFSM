@@ -8,6 +8,7 @@ import Sidebar from "./components/SideBar";
 const PageNotFound = lazy(() => import("./views/Erro404"));
 const Listagem = lazy(() => import("./views/Listagem"));
 const Trilha = lazy(() => import("./views/Trilha"));
+const DetalhesSer = lazy(() => import("./views/ListagemUnica"));
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
           <Route path="*" element={<PageNotFound />} />
           <Route path="/listagem" element={<Listagem />} />
           <Route path="/trilha" element={<Trilha />} />
+          <Route path="/ListagemUnica/:id" element={<DetalhesSer />} />
+          
         </Routes>
       </div>
     </Router>
