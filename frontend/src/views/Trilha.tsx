@@ -40,29 +40,32 @@ const trilhasDisponiveis: Record<
   "SemTrilha": {
     nome: "SemTrilha",
     pontos: [
-      { coordenadas: [-29.717055079683693, -53.72934471436021], imagem: "https://via.placeholder.com/300x200?text=Ponto+1" },
+      {
+        coordenadas: [-29.717055079683693, -53.72934471436021],
+        imagem: "/fotos/Amanita_muscaria.jpg",
+      },
     ],
   },
   "trilha1": {
     nome: "Trilha Vermelha",
     pontos: [
-      { coordenadas: [-29.717055079683693, -53.72934471436021], imagem: "https://via.placeholder.com/300x200?text=Ponto+1" },
-      { coordenadas: [-29.717082505146156, -53.729615368601664], imagem: "https://via.placeholder.com/300x200?text=Ponto+2" },
-      { coordenadas: [-29.717035495714047, -53.730445375105], imagem: "https://via.placeholder.com/300x200?text=Ponto+3" },
-      { coordenadas: [-29.717372412616157, -53.7299446634828], imagem: "https://via.placeholder.com/300x200?text=Ponto+4" },
-      { coordenadas: [-29.71781118980265, -53.730445375520546], imagem: "https://via.placeholder.com/300x200?text=Ponto+5" },
-      { coordenadas: [-29.717889535454184, -53.728961274975845], imagem: "https://via.placeholder.com/300x200?text=Ponto+6" },
-      { coordenadas: [-29.718477182261125, -53.72883946943917], imagem: "https://via.placeholder.com/300x200?text=Ponto+7" },
-      { coordenadas: [-29.718026636357354, -53.7277748878039], imagem: "https://via.placeholder.com/300x200?text=Ponto+8" },
+      { coordenadas: [-29.717055079683693, -53.72934471436021], imagem: "/fotos/Amanita_muscaria.jpg" },
+      { coordenadas: [-29.717082505146156, -53.729615368601664], imagem: "/fotos/Bugiu-Ruivo.jpg" },
+      { coordenadas: [-29.717035495714047, -53.730445375105], imagem: "/fotos/Colaptes melanochloros.jpg" },
+      { coordenadas: [-29.717372412616157, -53.7299446634828], imagem: "/fotos/Cryptotrama_aspartata.jpg" },
+      { coordenadas: [-29.71781118980265, -53.730445375520546], imagem: "/fotos/cymatoderma_caperatum.jpg" },
+      { coordenadas: [-29.717889535454184, -53.728961274975845], imagem: "/fotos/Dasypus-hybridus-1.jpg" },
+      { coordenadas: [-29.718477182261125, -53.72883946943917], imagem: "/fotos/Eugenia myrcianthes.jpg" },
+      { coordenadas: [-29.718026636357354, -53.7277748878039], imagem: "/fotos/Hydrochoerus hydrochaeris.jpg" },
     ],
   },
   "trilha2": {
     nome: "Trilha Azul",
     pontos: [
-      { coordenadas: [-29.716, -53.730], imagem: "https://via.placeholder.com/300x200?text=Ponto+1" },
-      { coordenadas: [-29.7165, -53.7295], imagem: "https://via.placeholder.com/300x200?text=Ponto+2" },
-      { coordenadas: [-29.717, -53.729], imagem: "https://via.placeholder.com/300x200?text=Ponto+3" },
-      { coordenadas: [-29.7175, -53.7285], imagem: "https://via.placeholder.com/300x200?text=Ponto+4" },
+      { coordenadas: [-29.716, -53.730], imagem: "/fotos/azul1.jpg" },
+      { coordenadas: [-29.7165, -53.7295], imagem: "/fotos/azul2.jpg" },
+      { coordenadas: [-29.717, -53.729], imagem: "/fotos/azul3.jpg" },
+      { coordenadas: [-29.7175, -53.7285], imagem: "/fotos/azul4.jpg" },
     ],
   },
 };
