@@ -16,3 +16,62 @@
 .sidebar-item:hover .ps-menu-icon {
   transform: scale(1.1);
 }
+
+.layout {
+  background-color: #c9c9c9;
+  font-family: "Arial", sans-serif;
+  min-height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.homeContainer {
+  color: #2e3d2f;
+}
+
+.mascotBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mascotPlaceholder {
+  width: 200px;
+  height: 200px;
+  background-color: #dfe7dc;
+  border: 2px dashed #4a7740;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #4a7740;
+  font-weight: bold;
+}
+
+.speechBubble {
+  background-color: #eaf4e1;
+  border-radius: 20px;
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(74, 119, 64, 0.2);
+}
+
+.speechBubble::after {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-right: 20px solid #eaf4e1;
+  border-bottom: 20px solid transparent;
+}
+
+.card {
+  background-color: #fef9f1;
+  border: none;
+  border-left: 5px solid #a98467;
+}
