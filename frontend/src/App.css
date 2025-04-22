@@ -4,6 +4,14 @@
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.text-brown {
+  color: #5e3023;
+}
+
+.text-green {
+  color: #5a8f29;
+}
+
 .sidebar-item:hover {
   background-color: #e8f7f3;
   color: #01c061 !important;

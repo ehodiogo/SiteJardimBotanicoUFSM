@@ -4,8 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "./components/SideBar";
 import Home from "./views/Home";
 
-// const Home = lazy(() => import("./pages/Home"));
-// TODO: manter a importação de pages com lazy para que no build ele divida o código em partes menores
 const PageNotFound = lazy(() => import("./views/Erro404"));
 const Listagem = lazy(() => import("./views/Listagem"));
 const Trilha = lazy(() => import("./views/Trilha"));
@@ -23,7 +21,7 @@ function App() {
         }}
       >
         <Routes>
-          <Route path="" element={<a>Home</a>} />
+          <Route path="" element={<Home />} />
           <Route path="*" element={<PageNotFound />} />
           <Route path="/listagem" element={<Listagem />} />
           <Route path="/trilha" element={<Trilha />} />

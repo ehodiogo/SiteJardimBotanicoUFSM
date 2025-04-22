@@ -20,7 +20,7 @@ export default function MySidebar() {
         collapsed={collapsed}
         transitionDuration={300}
         style={{
-          borderRight: "1px solid #01C061",
+          borderRight: "1px solid rgb(9, 65, 37)",
           backgroundColor: "#fff",
           height: "100vh",
           color: "#005B60",
