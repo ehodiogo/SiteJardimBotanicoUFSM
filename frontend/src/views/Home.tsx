@@ -8,6 +8,7 @@ import {
   HiOutlinePhone,
 } from "react-icons/hi";
 import HorariosFuncionamento from "../components/Horarios";
+import Agendamento from "../components/Agendamento";
 
 const Home: React.FC = () => {
   return (
@@ -33,8 +34,8 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-
         <HorariosFuncionamento />
+        <Agendamento />
       </div>
       <footer
         className="text-white pt-5 pb-3 p-4"
@@ -42,7 +43,6 @@ const Home: React.FC = () => {
       >
         <div className="">
           <div className="row mb-4">
-            {/* Coluna 1 - Descrição */}
             <div className="col-lg-4 mb-4">
               <h5 className="mb-3">Jardim Botânico da UFSM</h5>
               <p style={{ color: "#d6cfc9" }}>
@@ -104,7 +104,7 @@ const Home: React.FC = () => {
 
           <div
             className="text-center border-top pt-3"
-            style={{ color: "#c2b6ac", borderColor: "#6f4d3c" }}
+            style={{ color: " #c2b6ac", borderColor: "rgb(59, 40, 31)" }}
           >
             Jardim Botânico UFSM. Todos os direitos reservados.
           </div>
