@@ -26,7 +26,7 @@
 }
 
 .layout {
-  background-color: #c9c9c9;
+  background-color: #eff3e5;
   font-family: "Arial", sans-serif;
   min-height: 100vh;
   padding: 2rem;
@@ -79,7 +79,46 @@
 }
 
 .card {
-  background-color: #fef9f1;
-  border: none;
-  border-left: 5px solid #a98467;
+  background: linear-gradient(135deg, #fefdf9, #fdf8f2);
+  border-left: 6px solid #a98467;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(169, 132, 103, 0.15);
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -30%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at top right, #e6d4c6 0%, transparent 70%);
+  opacity: 0.15;
+  z-index: 0;
+}
+
+.agendamento-section {
+  position: relative;
+  color: white;
+}
+
+.agendamento-section h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.agendamento-section p {
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
+
+.agendamento-section a {
+  border-radius: 50px;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
 }

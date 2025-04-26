@@ -3,9 +3,9 @@ import "../App.css";
 
 const HorariosFuncionamento = () => {
   return (
-    <section className="py-5 px-3">
+    <section className="p-3">
       <div
-        className="card shadow-sm rounded p-4"
+        className="card shadow-sm rounded p-4 "
         style={{ maxWidth: "600px", margin: "0 auto" }}
       >
         <h4 className="mb-4 d-flex align-items-center text-brown">
@@ -14,7 +14,7 @@ const HorariosFuncionamento = () => {
         </h4>
 
         <div className="mb-3">
-          <div className="d-flex justify-content-between border-bottom pb-2">
+          <div className="d-flex justify-content-between">
             <div>
               <strong className="text-brown">Segunda a Sexta</strong>
               <div className="text-muted" style={{ fontSize: "0.9rem" }}>
@@ -26,7 +26,7 @@ const HorariosFuncionamento = () => {
         </div>
 
         <div className="mb-3">
-          <div className="d-flex justify-content-between border-bottom pb-2">
+          <div className="d-flex justify-content-between">
             <div>
               <strong className="text-brown">Sábados e Domingos</strong>
               <div className="text-muted" style={{ fontSize: "0.9rem" }}>
@@ -38,7 +38,7 @@ const HorariosFuncionamento = () => {
         </div>
 
         <div className="mb-3">
-          <div className="d-flex justify-content-between border-bottom pb-2">
+          <div className="d-flex justify-content-between">
             <div>
               <strong className="text-brown">Feriados</strong>
               <div className="text-muted" style={{ fontSize: "0.9rem" }}>
