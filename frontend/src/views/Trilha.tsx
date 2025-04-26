@@ -47,7 +47,7 @@ const trilhasDisponiveis: Record<
     ],
   },
   "trilha1": {
-    nome: "Trilha Vermelha",
+    nome: "Trilha Predador",
     pontos: [
       { coordenadas: [-29.717055079683693, -53.72934471436021], imagem: "/fotos/Amanita_muscaria.jpg" },
       { coordenadas: [-29.717082505146156, -53.729615368601664], imagem: "/fotos/Bugiu-Ruivo.jpg" },
@@ -60,7 +60,7 @@ const trilhasDisponiveis: Record<
     ],
   },
   "trilha2": {
-    nome: "Trilha Azul",
+    nome: "Trilha Caçador",
     pontos: [
       { coordenadas: [-29.716, -53.730], imagem: "/fotos/azul1.jpg" },
       { coordenadas: [-29.7165, -53.7295], imagem: "/fotos/azul2.jpg" },
