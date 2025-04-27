@@ -1,6 +1,5 @@
-import lerTextoEmVozAlto from "../functions/Acessibilidade";
-
 import { useNavigate } from "react-router-dom";
+import lerTextoEmVozAlto from "../functions/Acessibilidade";
 
 interface ItemProps {
   id: string;
@@ -16,31 +15,67 @@ interface ItemProps {
 }
 
 function CardAmostragem({ item }: { item: ItemProps }) {
-  // inside the component:
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
   return (
-    <div className="card shadow-lg border-0" style={{ width: "20rem", backgroundColor: "#f4f9f4" }}>
+    <div
+      className="card shadow-lg border-0"
+      style={{ width: "20rem", backgroundColor: "#f4f9f4", position: "relative" }}
+    >
       <img
         src={item.foto}
-        className="card-img-top"
         alt={item.nome}
-        style={{ borderTopLeftRadius: "12px", borderTopRightRadius: "12px", height: "200px", objectFit: "cover" }}
+        className="card-img-top"
+        style={{
+          display: "block",
+          width: "100%",
+          height: "200px",
+          objectFit: "cover",
+          borderTopLeftRadius: "12px",
+          borderTopRightRadius: "12px",
+          pointerEvents: "none", // ESSENCIAL
+          userSelect: "none", // previne seleção
+        }}
       />
+
       <div className="card-body text-center">
         <h5 className="card-title text-success fw-bold">{item.nome}</h5>
-        <p className="card-text text-muted" style={{ fontStyle: "italic" }}>{item.descricao}</p>
-        <p className="card-text">
-          <strong className="text-primary">Nome Científico:</strong> <span className="text-secondary">{item.dadosCientificos.nomeCientifico}</span>
-          {item.grupo && (
-            <p className="fw-light"> Grupo: <a className="fw-bold text-decoration-none text-success">{item.grupo}</a></p>
-          )}
+
+        <p className="card-text text-muted" style={{ fontStyle: "italic" }}>
+          {item.descricao}
         </p>
-        <button className="btn btn-success btn-sm mt-2" onClick={() => lerTextoEmVozAlto(item.descricaoAcessivel)}>
-          🌿 Ouvir Descrição
-        </button>
-        <button className="btn btn-info btn-sm mt-2" onClick={() => navigate(`/ListagemUnica/${item.nome}-${item.id}`)}>
-          Ver mais informações
-        </button>
+
+        <p className="card-text">
+          <strong className="text-primary">Nome Científico:</strong>{" "}
+          <span className="text-secondary">{item.dadosCientificos.nomeCientifico}</span>
+        </p>
+
+        {item.grupo && (
+          <p className="card-text fw-light">
+            Grupo:{" "}
+            <span className="fw-bold text-success">
+              {item.grupo}
+            </span>
+          </p>
+        )}
+
+        <div className="d-flex flex-column align-items-center gap-2 mt-3">
+          <button
+            type="button"
+            className="btn btn-success btn-sm"
+            onClick={() => lerTextoEmVozAlto(item.descricaoAcessivel)}
+          >
+            🌿 Ouvir Descrição
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-info btn-sm"
+            onClick={() => navigate(`/ListagemUnica/${item.nome}-${item.id}`)}
+          >
+            Ver mais informações
+          </button>
+        </div>
       </div>
     </div>
   );
