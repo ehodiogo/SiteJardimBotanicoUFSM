@@ -12,6 +12,8 @@ function DetalhesSer() {
     return <p className="text-center mt-5 text-danger">Ser não encontrado!</p>;
   }
 
+  console.log("Funcionalidades: ", ser.funcionalidade)
+
   return (
     <div className="container d-flex justify-content-center align-items-center py-5">
   <div
@@ -21,7 +23,7 @@ function DetalhesSer() {
       maxWidth: "480px",
       backgroundColor: "#f4f9f4",
       borderRadius: "16px",
-      minHeight: "600px", // Using minHeight instead of height for flexibility
+      minHeight: "600px", 
     }}
   >
     <img
@@ -49,6 +51,18 @@ function DetalhesSer() {
               <strong className="text-primary">Grupo:</strong>{" "}
               <span className="text-success fw-bold">{ser.grupo}</span>
             </p>
+          )}
+          {ser.funcionalidade && ser.funcionalidade.tags.length > 0 && (
+            <div className="mt-3">
+              <h5 className="text-success fw-bold">Funções no Ecossistema</h5>
+              <ul className="list-unstyled">
+                {ser.funcionalidade.tags.map((tag, index) => (
+                  <li key={index} className="text-secondary">
+                    🌿 {tag}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
           <button
             className="btn btn-success btn-sm mt-3"

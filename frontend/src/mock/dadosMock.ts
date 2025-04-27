@@ -271,7 +271,8 @@ const seres = {
       descricaoAcessivel: "O pica-pau é uma ave que tem uma língua longa para pegar insetos nas árvores. Ele é facilmente reconhecido pelo som de seu bico batendo nas árvores.",
       foto: "/fotos/Colaptes melanochloros.jpg",
       dadosCientificos: dadosCientificosAnimais[1],
-      type: "Animal"
+      type: "Animal",
+      funcionalidade: funcionalidades[1],
     },
     {
       id: "3",
@@ -281,7 +282,8 @@ const seres = {
       descricaoAcessivel: "O graxaim é um mamífero que se parece com um pequeno lobo, com pelagem que varia do cinza ao castanho. Ele vive em áreas abertas e é conhecido por sua habilidade de caçar em grupo.",
       foto: "/fotos/guaixinim.jpg",
       dadosCientificos: dadosCientificosAnimais[2],
-      type: "Animal"
+      type: "Animal",
+      funcionalidade: funcionalidades[2],
     },
     {
       id: "4",
@@ -291,7 +293,8 @@ const seres = {
       descricaoAcessivel: "O tigre-d'água é uma tartaruga com uma carapaça escura e uma cauda longa. É muito comum em áreas úmidas e pântanos.",
       foto: "/fotos/tigre-agua.jpg",
       dadosCientificos: dadosCientificosAnimais[3],
-      type: "Animal"
+      type: "Animal",
+      funcionalidade: funcionalidades[3],
     },
     {
       id: "5",
@@ -301,7 +304,8 @@ const seres = {
       descricaoAcessivel: "O jacaré-do-papo amarelo é um grande réptil com pele verde-escura e uma barriga amarela. Ele vive em pântanos e rios do Brasil.",
       foto: "/fotos/jacare-papo-amarelo.jpg",
       dadosCientificos: dadosCientificosAnimais[4],
-      type: "Animal"
+      type: "Animal",
+      funcionalidade: funcionalidades[4],
     },
     {
       id: "6",
@@ -311,7 +315,8 @@ const seres = {
       descricaoAcessivel: "O bugio é um macaco de pelagem marrom que vive em árvores e emite sons altos para se comunicar com outros membros de sua espécie.",
       foto: "/fotos/Bugiu-Ruivo.jpg",
       dadosCientificos: dadosCientificosAnimais[5],
-      type: "Animal"
+      type: "Animal",
+      funcionalidade: funcionalidades[5],
     },
     {
       id: "7",
@@ -321,7 +326,8 @@ const seres = {
       descricaoAcessivel: "O tatu molita é um pequeno mamífero que tem uma carapaça dura e escavadora. Ele vive em tocas e se alimenta de pequenos animais e vegetais.",
       foto: "/fotos/Dasypus-hybridus-1.jpg",
       dadosCientificos: dadosCientificosAnimais[6],
-      type: "Animal"
+      type: "Animal",
+      funcionalidade: funcionalidades[6],
     },
     {
       id: "8",
@@ -331,7 +337,8 @@ const seres = {
       descricaoAcessivel: "O teiú é um lagarto de grande porte que se alimenta de roedores e outros pequenos animais. Ele pode ser encontrado em áreas abertas e florestas.",
       foto: "/fotos/teiú.jpg",
       dadosCientificos: dadosCientificosAnimais[7],
-      type: "Animal"
+      type: "Animal",
+      funcionalidade: funcionalidades[7],
     },
     {
       id: "9",
@@ -341,7 +348,8 @@ const seres = {
       descricaoAcessivel: "A corija buraqueira é uma ave de pequeno porte que faz seus ninhos em buracos no solo. Ela é encontrada em áreas de campo aberto.",
       foto: "/fotos/corija-buraqueira.jpg",
       dadosCientificos: dadosCientificosAnimais[8],
-      type: "Animal"
+      type: "Animal",
+      funcionalidade: funcionalidades[8],
     },
     {
       id: "10",
@@ -351,7 +359,8 @@ const seres = {
       descricaoAcessivel: "A cruzeira é uma serpente venenosa de grande porte. Sua mordida pode ser fatal se não tratada corretamente. Ela é encontrada em áreas de mata.",
       foto: "/fotos/cruzeira.jpg",
       dadosCientificos: dadosCientificosAnimais[9],
-      type: "Animal"
+      type: "Animal",
+      funcionalidade: funcionalidades[9],
     },
     {
       id: "11",
@@ -364,6 +373,7 @@ const seres = {
       foto: "/fotos/Amanita_muscaria.jpg",
       dadosCientificos: dadosCientificosAnimais[10],
       type: "Fungo",
+      funcionalidade: funcionalidades[10],
     },
     {
       id: "12",
@@ -376,6 +386,7 @@ const seres = {
       foto: "/fotos/cymatoderma_caperatum.jpg",
       dadosCientificos: dadosCientificosAnimais[11],
       type: "Fungo",
+      funcionalidade: funcionalidades[11],
     },
     {
       id: "13",
@@ -387,6 +398,7 @@ const seres = {
       foto: "/fotos/Cryptotrama_aspartata.jpg",
       dadosCientificos: dadosCientificosAnimais[12],
       type: "Fungo",
+      funcionalidade: funcionalidades[12],
     },
     {
       id: "14",
@@ -399,6 +411,7 @@ const seres = {
       foto: "/fotos/kusaghiporia_talpae.jpg",
       dadosCientificos: dadosCientificosAnimais[13],
       type: "Fungo",
+      funcionalidade: funcionalidades[13],
     },
     {
       id: "15",
@@ -411,6 +424,7 @@ const seres = {
       foto: "/fotos/Jerivaldo.png",
       dadosCientificos: dadosCientificosAnimais[14],
       type: "Planta",
+      funcionalidade: funcionalidades[14],
     },
     {
       id: "16",
@@ -422,6 +436,7 @@ const seres = {
       foto: "/fotos/bauhinia-variegata.jpg",
       dadosCientificos: dadosCientificosAnimais[15],
       type: "Planta",
+      funcionalidade: funcionalidades[15],
     },
     {
       id: "17",
@@ -433,6 +448,7 @@ const seres = {
       foto: "/fotos/pinus.jpg",
       dadosCientificos: dadosCientificosAnimais[16],
       type: "Planta",
+      funcionalidade: funcionalidades[16],
     },
     {
       id: "18",
@@ -445,6 +461,7 @@ const seres = {
       foto: "/fotos/ochna-serrulata.jpg",
       dadosCientificos: dadosCientificosAnimais[17],
       type: "Planta",
+      funcionalidade: funcionalidades[17],
     },
     {
       id: "19",
@@ -457,6 +474,7 @@ const seres = {
       foto: "/fotos/Eugenia myrcianthes.jpg",
       dadosCientificos: dadosCientificosAnimais[18],
       type: "Planta",
+      funcionalidade: funcionalidades[18],
     },
     {
       id: "20",
@@ -469,6 +487,7 @@ const seres = {
       foto: "/fotos/chloroleucon-tortum.jpg",
       dadosCientificos: dadosCientificosAnimais[19],
       type: "Planta",
+      funcionalidade: funcionalidades[19],
     },
   ]
 };
