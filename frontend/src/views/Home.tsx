@@ -7,34 +7,17 @@ import {
   HiOutlineMail,
   HiOutlinePhone,
 } from "react-icons/hi";
-import HorariosFuncionamento from "../components/Horarios";
 import Agendamento from "../components/Agendamento";
+import NossaHistoria from "../components/NossaHistoria";
+import HorariosENormas from "../components/Horarios";
 
 const Home: React.FC = () => {
   return (
     <div>
       <div className="homeContainer px-6 py-10">
         <MascotSection />
-
-        <div className="container mb-5">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h5 className="card-title">🌳 Nossa História</h5>
-              <p className="card-text">
-                O Jardim Botânico da UFSM foi criado em 1981 como uma área de
-                preservação e ensino, com o objetivo de conservar espécies
-                nativas da flora regional e promover a educação ambiental. Ele
-                ocupa uma área de aproximadamente 25 hectares no campus de Santa
-                Maria, abrigando trilhas ecológicas, coleções científicas e
-                programas de pesquisa e extensão.
-                <br />
-                <br />É um espaço onde ciência, preservação e comunidade
-                caminham juntas em harmonia com a natureza.
-              </p>
-            </div>
-          </div>
-        </div>
-        <HorariosFuncionamento />
+        <NossaHistoria />
+        <HorariosENormas />
         <Agendamento />
       </div>
       <footer
@@ -106,7 +89,7 @@ const Home: React.FC = () => {
             className="text-center border-top pt-3"
             style={{ color: " #c2b6ac", borderColor: "rgb(59, 40, 31)" }}
           >
-            Jardim Botânico UFSM. Todos os direitos reservados.
+            Jardim Botânico de Santa Maria. Todos os direitos reservados.
           </div>
         </div>
       </footer>
