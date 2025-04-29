@@ -71,9 +71,9 @@ const trilhasDisponiveis: Record<
 };
 
 const tagsComTrilhas: Record<string, string> = {
-  "Predador": "trilha1",
-  "Caçador": "trilha2",
-  "Medicinal": "trilha1",
+  "Predadores": "trilha1",
+  "Caçadores": "trilha2",
+  "Medicinais": "trilha1",
 };
 
 const Trilha = () => {
