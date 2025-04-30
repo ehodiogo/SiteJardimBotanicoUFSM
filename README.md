@@ -35,3 +35,23 @@
 - X  
 - Y  
 - Z  
+
+# Meu Projeto
+
+Este é um projeto simples para demonstrar como executar um comando a partir do terminal.
+
+## Pré-requisitos
+
+Certifique-se de ter os seguintes itens instalados:
+
+- [Node.js](https://nodejs.org/) (v14 ou superior)
+- npm (gerenciador de pacotes do Node)
+
+## Instalação
+
+Clone o repositório e instale as dependências:
+
+```bash
+git clone https://github.com/usuario/meu-projeto.git
+cd meu-projeto
+npm install
