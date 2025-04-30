@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  django:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile 
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - jb-p1-db 
+    env_file:
+      - .env 
+    environment:
+      - SERVICE=backend
+    command: ["bash", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+    networks:
+      - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile  
+    ports:
+      - "3000:3000"
+    environment:
+      - SERVICE=frontend
+    command: ["npm", "run", "dev"]
+    networks:
+      - backend
+
+  jb-p1-db:
+    image: postgres:14-alpine
+    container_name: jb-p1-db-1
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PORT: ${DB_PORT}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  
+    networks:
+      - backend
+
+volumes:
+  postgres_data:  
+  redis_data:
+
+networks:
+  backend:
+    driver: bridge 
