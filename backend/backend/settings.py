@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'trilhas',
     'amostras',
+    'acessibilidade',
+    'tag',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg', 

@@ -36,5 +36,7 @@ class Amostra(models.Model):
 
     dados_cientificos = models.ForeignKey('DadosCientificos', on_delete=models.CASCADE)
 
+    localizacao = models.ForeignKey('trilhas.Ponto', on_delete=models.SET_NULL, null=True)
+
     def __str__(self):
         return f"{self.nome_popular or self.nome_cientifico} ({self.get_tipo_display()})"
