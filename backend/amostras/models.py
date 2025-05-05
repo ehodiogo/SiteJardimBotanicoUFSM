@@ -36,6 +36,7 @@ class Amostra(models.Model):
 
     dados_cientificos = models.ForeignKey('DadosCientificos', on_delete=models.CASCADE)
 
+    # could have loc
     localizacao = models.ForeignKey('trilhas.Ponto', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
