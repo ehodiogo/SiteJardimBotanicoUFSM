@@ -31,6 +31,8 @@ class GuiaTrilha(models.Model):
 class Trilha(models.Model):
     nome = models.CharField(max_length=150)
     pontos = models.ManyToManyField(Ponto)
+    duracao = models.CharField(max_length=50, blank=True, null=True)
+    dificuldade = models.PositiveSmallIntegerField(blank=True, null=True)
 
     # tags da trilha
     tags = models.ManyToManyField('tag.Tag')

@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Trilha, GuiaTrilha, Ponto
 
-# Register your models here.
+admin.site.register(Trilha)
+admin.site.register(GuiaTrilha)
+admin.site.register(Ponto)
