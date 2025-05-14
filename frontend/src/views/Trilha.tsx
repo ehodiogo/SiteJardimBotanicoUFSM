@@ -13,7 +13,6 @@ import {
 } from "react-leaflet";
 import L from "leaflet";
 
-// Distância em metros entre dois pontos
 function calcularDistancia(
   lat1: number,
   lon1: number,
@@ -31,10 +30,9 @@ function calcularDistancia(
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  return R * c; // metros
+  return R * c; 
 }
 
-// Cálculo da direção (ângulo) entre dois pontos
 function calcularDirecao(
   pontoA: [number, number],
   pontoB: [number, number]
@@ -55,7 +53,6 @@ function calcularDirecao(
   return brngDeg;
 }
 
-// Texto com base no ângulo
 function descreverDirecao(angulo: number): string {
   if (angulo < 45 || angulo >= 315) return "siga para o norte";
   if (angulo >= 45 && angulo < 135) return "vire à direita (leste)";
@@ -64,7 +61,6 @@ function descreverDirecao(angulo: number): string {
   return "";
 }
 
-// Formatação do tempo estimado
 function formatarTempo(segundos: number): string {
   const minutos = Math.floor(segundos / 60);
   const segundosRestantes = Math.floor(segundos % 60);
