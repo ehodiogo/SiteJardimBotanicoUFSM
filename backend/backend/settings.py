@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'agendamento',
     'horario',
     'bolsista',
+    'presenca',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg', 
