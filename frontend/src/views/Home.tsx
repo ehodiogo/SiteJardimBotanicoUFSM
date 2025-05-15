@@ -10,7 +10,7 @@ const Home: React.FC = () => {
         <p className="lead">
           Um espaço de preservação ambiental, educação e pesquisa na Universidade Federal de Santa Maria.
         </p>
-        <Link to="/exibir" className="btn btn-success btn-lg mt-3">
+        <Link to="/listagem" className="btn btn-success btn-lg mt-3">
           Ver dados do backend
         </Link>
       </div>

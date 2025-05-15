@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .models import ConfiguracaoJB
+from .serializers import ConfiguracaoJBSerializer
 
-# Create your views here.
+
+class ConfiguracaoJBViewSet(viewsets.ModelViewSet):
+    queryset = ConfiguracaoJB.objects.all()
+    serializer_class = ConfiguracaoJBSerializer

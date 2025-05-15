@@ -4,7 +4,8 @@ import { lazy } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "leaflet/dist/leaflet.css";
 
-const ExibirDados = lazy(() => import('./views/Listagem'));
+const ExibirDados = lazy(() => import('./views/ExibirDados'));
+const ExibirDado = lazy(() => import('./views/ExibirDado'));
 const Home = lazy(() => import('./views/Home'));
 const Trilhas = lazy(() => import('./views/Trilhas'));
 const TrilhaPage = lazy(() => import('./views/Trilha'));
@@ -14,7 +15,8 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/exibir" element={<ExibirDados />} />
+        <Route path="/listagem" element={<ExibirDados />} />
+        <Route path="/listagem/:id" element={<ExibirDado />} />
         <Route path="/trilhas" element={<Trilhas />} />
         <Route path="/trilha/:id" element={<TrilhaPage />} />
       </Routes>

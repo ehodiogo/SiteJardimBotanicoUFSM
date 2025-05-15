@@ -7,8 +7,8 @@ class ConfiguracaoJB(models.Model):
     dia_semana = models.IntegerField()
 
     def __str__(self):
-        return self.dia_semana + " - " + self.horario_abertura + " - " + self.horario_fechamento
-    
+        return f"{self.dia_semana} - {self.horario_abertura} - {self.horario_fechamento}"
+
     class Meta:
         verbose_name = 'Configuração de horário'
         verbose_name_plural = 'Configurações de horário'
