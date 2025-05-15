@@ -9,6 +9,7 @@ export type Ponto = {
   descricao: string;
   order: number;
   guia: Guia;
+  imagem: string;
 }
 
 export type Trilha = {

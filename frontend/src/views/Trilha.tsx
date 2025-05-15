@@ -1,78 +1,27 @@
 import { useParams } from "react-router-dom";
 import "../css/TrilhaPage.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Trilha } from "../types/Trilha";
 import { getAllData } from "../services/Api";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  Circle,
-  Polyline,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import L from "leaflet";
-
-function calcularDistancia(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-) {
-  const R = 6371e3;
-  const φ1 = (lat1 * Math.PI) / 180;
-  const φ2 = (lat2 * Math.PI) / 180;
-  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-  const a =
-    Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return R * c; 
-}
-
-function calcularDirecao(
-  pontoA: [number, number],
-  pontoB: [number, number]
-): number {
-  const [lat1, lon1] = pontoA;
-  const [lat2, lon2] = pontoB;
-
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const y = Math.sin(dLon) * Math.cos((lat2 * Math.PI) / 180);
-  const x =
-    Math.cos((lat1 * Math.PI) / 180) * Math.sin((lat2 * Math.PI) / 180) -
-    Math.sin((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.cos(dLon);
-  const brng = Math.atan2(y, x);
-  const brngDeg = ((brng * 180) / Math.PI + 360) % 360;
-
-  return brngDeg;
-}
-
-function descreverDirecao(angulo: number): string {
-  if (angulo < 45 || angulo >= 315) return "siga para o norte";
-  if (angulo >= 45 && angulo < 135) return "vire à direita (leste)";
-  if (angulo >= 135 && angulo < 225) return "siga para o sul";
-  if (angulo >= 225 && angulo < 315) return "vire à esquerda (oeste)";
-  return "";
-}
-
-function formatarTempo(segundos: number): string {
-  const minutos = Math.floor(segundos / 60);
-  const segundosRestantes = Math.floor(segundos % 60);
-  return `${minutos} min ${segundosRestantes} s`;
-}
+import { BsFillGeoFill, BsGeoAltFill } from "react-icons/bs";
+import ReactDOMServer from "react-dom/server";
+import { falarTexto } from "../functions/Fala";
+import calcularDistancia from "../functions/Distancia";
 
 const TrilhaPage = () => {
+  const [usarPosicaoReal, setUsarPosicaoReal] = useState(true);
   const [trilha, setTrilha] = useState<Trilha>();
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null
   );
+
   const [mapType, setMapType] = useState("satellite");
+  const [pontoAtual, setPontoAtual] = useState(1);
+  const [visitados, setVisitados] = useState<number[]>([]); 
+  const [mostrarPontoAtual, setMostrarPontoAtual] = useState(false);
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -80,176 +29,273 @@ const TrilhaPage = () => {
       if (res) setTrilha(res);
     });
 
-    // setUserLocation([-29.71675789534707, -53.729767314748]);
 
-    if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(
-        (pos) => {
-          setUserLocation([pos.coords.latitude, pos.coords.longitude]);
-        },
-        (err) => console.warn("Erro ao obter localização:", err),
-        { enableHighAccuracy: true }
-      );
+    if (usarPosicaoReal) {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          (pos) => {
+            setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+          },
+          (err) => console.warn("Erro ao obter localização:", err),
+          { enableHighAccuracy: true }
+        );
+      }  
+    } else {
+      setUserLocation([-29.716895283302495, -53.729593828291925]);
     }
-  }, [id]);
+    
+  }, [id, usarPosicaoReal]);
 
-  if (!trilha) return <div>Carregando trilha...</div>;
+  const pontosOrdenados = useMemo(() => {
+    if (!trilha?.pontos) return [];
+    return [...trilha.pontos].sort((a, b) => a.order - b.order);
+  }, [trilha?.pontos]);
 
-  const pontosOrdenados = trilha.pontos.sort((a, b) => a.order - b.order);
+  useEffect(() => {
+    if (!userLocation || !trilha) return;
+
+    const ponto = pontosOrdenados.find((p) => p.order === pontoAtual);
+    if (!ponto) return;
+
+    const distancia = calcularDistancia(
+      userLocation[0],
+      userLocation[1],
+      ponto.latitude,
+      ponto.longitude
+    );
+
+    if (distancia <= 3 && !visitados.includes(ponto.order)) {
+      falarTexto(ponto.descricao);
+      falarTexto(ponto.guia.descricao);
+      setVisitados((prev) => [...prev, ponto.order]);
+      setMostrarPontoAtual(true); 
+    }
+  }, [userLocation, pontoAtual, visitados, trilha, pontosOrdenados]);
+
+  const irParaProximoPonto = () => {
+    setPontoAtual((prev) => prev + 1);
+    setMostrarPontoAtual(false);
+  };
+
   const centro: [number, number] = pontosOrdenados.length
     ? [pontosOrdenados[0].latitude, pontosOrdenados[0].longitude]
     : [-29.7, -53.7];
 
-  const proximoPonto = userLocation
-    ? pontosOrdenados.reduce((maisProximo, ponto) => {
-        const distAtual = calcularDistancia(
-          userLocation[0],
-          userLocation[1],
-          ponto.latitude,
-          ponto.longitude
-        );
-        const distMaisProx = calcularDistancia(
-          userLocation[0],
-          userLocation[1],
-          maisProximo.latitude,
-          maisProximo.longitude
-        );
-        return distAtual < distMaisProx ? ponto : maisProximo;
-      }, pontosOrdenados[0])
-    : null;
+  const ponto = pontosOrdenados.find((p) => p.order === pontoAtual);
 
-  const distancia =
-    userLocation && proximoPonto
-      ? calcularDistancia(
-          userLocation[0],
-          userLocation[1],
-          proximoPonto.latitude,
-          proximoPonto.longitude
-        )
-      : null;
+  if (!trilha) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "60vh" }}
+      >
+        <div className="spinner-border text-primary" role="status" />
+        <span className="ms-2">Carregando trilha...</span>
+      </div>
+    );
+  }
 
-  const VELOCIDADE_MEDIA_MS = 1.39; 
-  const tempoEstimadoSegundos =
-    distancia !== null ? distancia / VELOCIDADE_MEDIA_MS : null;
+  if (!userLocation) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "60vh" }}
+      >
+        <div className="spinner-border text-primary" role="status" />
+        <span className="ms-2">Carregando localização...</span>
+      </div>
+    );
+  }
 
-  const direcao =
-    userLocation && proximoPonto
-      ? calcularDirecao(userLocation, [
-          proximoPonto.latitude,
-          proximoPonto.longitude,
-        ])
-      : null;
+  if (!ponto) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "60vh" }}
+      >
+        <div className="spinner-border text-primary" role="status" />
+        <span className="ms-2">Carregando pontos...</span>
+      </div>
+    );
+  }
 
-  const tileLayerUrls: Record<string, { url: string; attribution: string }> = {
-    standard: {
-      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
-    },
-    satellite: {
-      url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      attribution: "Tiles &copy; Esri",
-    },
-  };
+  console.log("Distancias:", visitados);
+  console.log(
+    "Distancia usuario proximo ponto:",
+    calcularDistancia(
+      userLocation[0],
+      userLocation[1],
+      ponto.latitude,
+      ponto.longitude
+    )
+  );
 
   return (
-    <div className="container">
-      <h1>{trilha.nome}</h1>
-      <p>
-        <strong>Dificuldade:</strong> {trilha.dificuldade}
-      </p>
-      <p>
-        <strong>Duração:</strong> {trilha.duracao}
-      </p>
-      <p>
-        <strong>Tags:</strong> {trilha.tags.join(", ")}
-      </p>
+    <div className="container py-4">
+      <h1 className="mb-4">{trilha.nome}</h1>
 
-      {userLocation && proximoPonto && (
-        <>
-          <p>
-            <strong>Distância até o próximo ponto:</strong>{" "}
-            {(distancia! / 1000).toFixed(2)} km
-          </p>
-          <p>
-            <strong>Tempo estimado até o próximo ponto:</strong>{" "}
-            {formatarTempo(tempoEstimadoSegundos!)}
-          </p>
-          <p>
-            <strong>Direção sugerida:</strong> {descreverDirecao(direcao!)}
-          </p>
-        </>
-      )}
+      <div className="row mb-3">
+        <div className="col-md-4">
+          <div className="card shadow-sm mb-3">
+            <div className="card-body">
+              <h5 className="card-title">Dificuldade</h5>
+              <p className="card-text">{trilha.dificuldade}</p>
+            </div>
+          </div>
+        </div>
 
-      <label style={{ marginTop: "10px", display: "block" }}>
-        Tipo de mapa:{" "}
-        <select value={mapType} onChange={(e) => setMapType(e.target.value)}>
+        <div className="col-md-4">
+          <div className="card shadow-sm mb-3">
+            <div className="card-body">
+              <h5 className="card-title">Duração</h5>
+              <p className="card-text">{trilha.duracao}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-4">
+          <div className="card shadow-sm mb-3">
+            <div className="card-body">
+              <h5 className="card-title">Tags</h5>
+              <p className="card-text">{trilha.tags.join(", ")}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-3 mb-4">
+        <label className="form-label">Tipo de mapa:</label>
+        <select
+          className="form-select"
+          value={mapType}
+          onChange={(e) => setMapType(e.target.value)}
+        >
           <option value="standard">Padrão</option>
-=          <option value="satellite">Satélite</option>
+          <option value="satellite">Satélite</option>
         </select>
-      </label>
+      </div>
 
-      <MapContainer
-        center={centro}
-        zoom={50}
-        style={{ height: "500px", width: "100%", marginTop: "20px" }}
-      >
-        <TileLayer
-          url={tileLayerUrls[mapType].url}
-          attribution={tileLayerUrls[mapType].attribution}
-        />
-
-        {pontosOrdenados.map((ponto) => (
-          <Marker
-            key={ponto.id}
-            position={[ponto.latitude, ponto.longitude]}
-            icon={L.icon({
-              iconUrl:
-                "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-              iconSize: [25, 41],
-              iconAnchor: [12, 41],
-            })}
-          >
-            <Popup>
-              <strong>{ponto.descricao}</strong>
-              <br />
-              {ponto.guia.descricao}
-            </Popup>
-          </Marker>
-        ))}
-
-        {userLocation && (
-          <>
-            <Marker
-              position={userLocation}
-              icon={L.icon({
-                iconUrl: "https://www.svgrepo.com/show/13671/location-pin.svg",
-                iconSize: [30, 30],
-                iconAnchor: [15, 30],
-              })}
-            >
-              <Popup>Sua localização atual</Popup>
-            </Marker>
-            <Circle
-              center={userLocation}
-              radius={10}
-              pathOptions={{ color: "blue" }}
-            />
-          </>
-        )}
-
-        {userLocation && proximoPonto && (
-          <Polyline
-            positions={[
-              userLocation,
-              [proximoPonto.latitude, proximoPonto.longitude],
-            ]}
-            pathOptions={{ color: "red", weight: 4 }}
+      <div className="mb-5" style={{ position: "relative" }}>
+        <MapContainer
+          center={centro}
+          zoom={17}
+          style={{ height: "500px", width: "100%" }}
+        >
+          <TileLayer
+            url={tileLayerUrls[mapType].url}
+            attribution={tileLayerUrls[mapType].attribution}
           />
+
+          {pontosOrdenados.map((ponto) => {
+            const liberado =
+              visitados.includes(ponto.order) || ponto.order === pontoAtual;
+            return (
+              liberado && (
+                <Marker
+                  key={ponto.id}
+                  position={[ponto.latitude, ponto.longitude]}
+                  icon={L.divIcon({
+                    className: "",
+                    html: ReactDOMServer.renderToString(
+                      <BsGeoAltFill
+                        size={30}
+                        color={ponto.order === pontoAtual ? "green" : "blue"}
+                      />
+                    ),
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                  })}
+                >
+                  <Popup>
+                    <strong>{ponto.descricao}</strong>
+                    <br />
+                    {ponto.guia.descricao}
+                    <br />
+                    <small>Ordem: {ponto.order}</small>
+                  </Popup>
+                </Marker>
+              )
+            );
+          })}
+
+          {userLocation && (
+            <>
+              <Marker
+                position={userLocation}
+                icon={L.divIcon({
+                  className: "",
+                  html: ReactDOMServer.renderToString(
+                    <BsFillGeoFill size={30} color="red" />
+                  ),
+                  iconSize: [30, 30],
+                  iconAnchor: [15, 30],
+                })}
+              >
+                <Popup>Sua localização atual</Popup>
+              </Marker>
+              <Circle
+                center={userLocation}
+                radius={2}
+                pathOptions={{ color: "red" }}
+              />
+            </>
+          )}
+        </MapContainer>
+
+        {mostrarPontoAtual && ponto && (
+          <div
+            style={{
+              position: "fixed",
+              bottom: 20,
+              left: "50%",
+              transform: "translateX(-50%)",
+              backgroundColor: "white",
+              padding: 20,
+              borderRadius: 10,
+              boxShadow: "0 0 10px rgba(0,0,0,0.3)",
+              maxWidth: 400,
+              width: "90%",
+              zIndex: 9999,
+              textAlign: "center",
+            }}
+          >
+            <img
+              src={ponto.imagem}
+              alt={`Imagem do ponto ${ponto.order}`}
+              style={{ width: "100%", borderRadius: 8, marginBottom: 10 }}
+            />
+            <p>{ponto.descricao}</p>
+            <button
+              className="btn btn-primary"
+              onClick={irParaProximoPonto}
+              style={{ marginTop: 10 }}
+            >
+              Ir para o próximo ponto
+            </button>
+          </div>
         )}
-      </MapContainer>
+      </div>
+
+      <div>
+        <button onClick={() => setUsarPosicaoReal((prev) => !prev)}>
+          {usarPosicaoReal ? "Usar Posição Mockada" : "Usar Posição Real"}
+        </button>
+
+      </div>
     </div>
   );
+};
+
+const tileLayerUrls: Record<string, { url: string; attribution: string }> = {
+  standard: {
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+  },
+  satellite: {
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Tiles &copy; Esri",
+  },
 };
 
 export default TrilhaPage;

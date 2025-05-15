@@ -12,6 +12,9 @@ class Ponto(models.Model):
     # could have 
     order = models.IntegerField(blank=True, null=True)
 
+    # imagem
+    imagem = models.ImageField(upload_to='trilhas/', blank=True, null=True)
+
     def __str__(self):
         return f"{self.latitude}, {self.longitude}"
     

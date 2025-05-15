@@ -4,84 +4,47 @@ import { useState, useEffect } from "react";
 import { Trilha } from "../types/Trilha";
 
 const TrilhasJardimBotanico = () => {
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
   const [trilhas, setTrilhas] = useState<Trilha[]>([]);
 
   useEffect(() => {
-    getAllData<Trilha[]>('trilhas').then((res) => {
+    getAllData<Trilha[]>("trilhas").then((res) => {
       if (res) setTrilhas(res);
     });
   }, []);
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.titulo}>Trilhas do Jardim Botânico da UFSM</h1>
-      <div style={styles.grid}>
+    <div className="container py-5 bg-light min-vh-100">
+      <h1 className="text-center text-primary mb-5">
+        Trilhas do Jardim Botânico da UFSM
+      </h1>
+
+      <div className="row g-4 justify-content-center">
         {trilhas.map((trilha) => (
-          <div key={trilha.id} style={styles.card}>
-            <h2 style={styles.cardTitulo}>{trilha.nome}</h2>
-            <p style={styles.cardDescricao}>{trilha.nome}</p>
-            <p>
-              <strong>Dificuldade:</strong> {trilha.dificuldade}
-            </p>
-            <p>
-              <strong>Duração:</strong> {trilha.duracao}
-            </p>
-            <button style={styles.botao} onClick={() => navigate(`/trilha/${trilha.id}`)}>Ver Detalhes</button>
+          <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={trilha.id}>
+            <div className="card h-100 shadow-sm border-0">
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title text-warning">{trilha.nome}</h5>
+                <p className="card-text text-muted mb-2">{trilha.nome}</p>
+                <p className="mb-1">
+                  <strong>Dificuldade:</strong> {trilha.dificuldade}
+                </p>
+                <p className="mb-3">
+                  <strong>Duração:</strong> {trilha.duracao}
+                </p>
+                <button
+                  className="mt-auto btn btn-primary"
+                  onClick={() => navigate(`/trilha/${trilha.id}`)}
+                >
+                  Ver Detalhes
+                </button>
+              </div>
+            </div>
           </div>
         ))}
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    padding: "40px",
-    backgroundColor: "#eef5e9",
-    minHeight: "100vh",
-    textAlign: "center" as const,
-  },
-  titulo: {
-    fontSize: "2.5rem",
-    color: "#2e7d32",
-    marginBottom: "40px",
-  },
-  grid: {
-    display: "flex",
-    flexWrap: "wrap" as const,
-    justifyContent: "center" as const,
-    gap: "20px",
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    padding: "20px",
-    width: "300px",
-    boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
-    transition: "0.3s",
-    textAlign: "left" as const,
-  },
-  cardTitulo: {
-    fontSize: "1.5rem",
-    color: "#33691e",
-    marginBottom: "10px",
-  },
-  cardDescricao: {
-    fontSize: "1rem",
-    color: "#555",
-    marginBottom: "10px",
-  },
-  botao: {
-    marginTop: "10px",
-    padding: "10px 20px",
-    backgroundColor: "#66bb6a",
-    color: "#fff",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-  },
 };
 
 export default TrilhasJardimBotanico;
