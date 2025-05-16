@@ -14,7 +14,7 @@ class PontoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ponto
-        fields = ["id", "latitude", "longitude", "descricao", "order", "guia"]
+        fields = ["id", "latitude", "longitude", "descricao", "order", "guia", "imagem"]
 
 
 class TrilhaSerializer(serializers.ModelSerializer):

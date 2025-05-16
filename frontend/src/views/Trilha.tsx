@@ -264,6 +264,7 @@ const TrilhaPage = () => {
               alt={`Imagem do ponto ${ponto.order}`}
               style={{ width: "100%", borderRadius: 8, marginBottom: 10 }}
             />
+            <p>Imagem url: {ponto.imagem}</p>
             <p>{ponto.descricao}</p>
             <button
               className="btn btn-primary"
