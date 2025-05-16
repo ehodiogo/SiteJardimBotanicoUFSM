@@ -6,6 +6,7 @@ from presenca.views import PresencaViewSet
 from bolsista.views import BolsistaViewSet, HorarioBolsistaViewSet
 from agendamento.views import AgendamentoViewSet
 from horario.views import ConfiguracaoJBViewSet
+from quiz.views import QuizAmostraViewSet
 
 router = DefaultRouter()
 router.register(r'amostras', AmostraViewSet)
@@ -16,6 +17,7 @@ router.register(r"bolsistas", BolsistaViewSet)
 router.register(r"horarios-bolsistas", HorarioBolsistaViewSet)
 router.register(r"agendamentos", AgendamentoViewSet)
 router.register(r"configuracoes", ConfiguracaoJBViewSet)
+router.register(r"quiz", QuizAmostraViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
