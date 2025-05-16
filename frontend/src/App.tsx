@@ -11,6 +11,7 @@ const Trilhas = lazy(() => import('./views/Trilhas'));
 const TrilhaPage = lazy(() => import('./views/Trilha'));
 const Agendamento = lazy(() => import('./views/Agendamento'));
 const Quiz = lazy(() => import('./views/Quiz'));
+const NotFound = lazy(() => import('./views/404NotFound'));
 
 const App: React.FC = () => {
   return (
@@ -23,6 +24,8 @@ const App: React.FC = () => {
         <Route path="/trilha/:id" element={<TrilhaPage />} />
         <Route path="/agendamento" element={<Agendamento />} />
         <Route path="/quiz" element={<Quiz />} />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
