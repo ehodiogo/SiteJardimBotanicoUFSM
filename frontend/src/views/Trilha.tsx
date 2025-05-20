@@ -9,6 +9,17 @@ import { BsFillGeoFill, BsGeoAltFill } from "react-icons/bs";
 import ReactDOMServer from "react-dom/server";
 import { falarTexto } from "../functions/Fala";
 import calcularDistancia from "../functions/Distancia";
+import { useMap } from "react-leaflet";
+
+const RecenterMap = ({ center }: { center: [number, number] }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (center) {
+      map.flyTo(center, 17, { duration: 1.5 });
+    }
+  }, [center, map]);
+  return null;
+};
 
 const TrilhaPage = () => {
   const [usarPosicaoReal, setUsarPosicaoReal] = useState(true);
@@ -16,11 +27,11 @@ const TrilhaPage = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null
   );
-
   const [mapType, setMapType] = useState("satellite");
   const [pontoAtual, setPontoAtual] = useState(1);
-  const [visitados, setVisitados] = useState<number[]>([]); 
+  const [visitados, setVisitados] = useState<number[]>([]);
   const [mostrarPontoAtual, setMostrarPontoAtual] = useState(false);
+  const [mapCenter, setMapCenter] = useState<[number, number] | null>(null);
 
   const { id } = useParams();
 
@@ -28,7 +39,6 @@ const TrilhaPage = () => {
     getAllData<Trilha>(`trilhas/${id}`).then((res) => {
       if (res) setTrilha(res);
     });
-
 
     if (usarPosicaoReal) {
       if (navigator.geolocation) {
@@ -39,11 +49,10 @@ const TrilhaPage = () => {
           (err) => console.warn("Erro ao obter localização:", err),
           { enableHighAccuracy: true }
         );
-      }  
+      }
     } else {
       setUserLocation([-29.716895283302495, -53.729593828291925]);
     }
-    
   }, [id, usarPosicaoReal]);
 
   const pontosOrdenados = useMemo(() => {
@@ -68,7 +77,7 @@ const TrilhaPage = () => {
       falarTexto(ponto.descricao);
       falarTexto(ponto.guia.descricao);
       setVisitados((prev) => [...prev, ponto.order]);
-      setMostrarPontoAtual(true); 
+      setMostrarPontoAtual(true);
     }
   }, [userLocation, pontoAtual, visitados, trilha, pontosOrdenados]);
 
@@ -89,8 +98,12 @@ const TrilhaPage = () => {
         className="d-flex justify-content-center align-items-center"
         style={{ minHeight: "60vh" }}
       >
-        <div className="spinner-border text-primary" role="status" />
-        <span className="ms-2">Carregando trilha...</span>
+        <div
+          className="spinner-border"
+          role="status"
+          style={{ color: "#2e7d32" }}
+        />
+        <span className="ms-2 text-success">Carregando trilha...</span>
       </div>
     );
   }
@@ -101,8 +114,12 @@ const TrilhaPage = () => {
         className="d-flex justify-content-center align-items-center"
         style={{ minHeight: "60vh" }}
       >
-        <div className="spinner-border text-primary" role="status" />
-        <span className="ms-2">Carregando localização...</span>
+        <div
+          className="spinner-border"
+          role="status"
+          style={{ color: "#2e7d32" }}
+        />
+        <span className="ms-2 text-success">Carregando localização...</span>
       </div>
     );
   }
@@ -113,179 +130,225 @@ const TrilhaPage = () => {
         className="d-flex justify-content-center align-items-center"
         style={{ minHeight: "60vh" }}
       >
-        <div className="spinner-border text-primary" role="status" />
-        <span className="ms-2">Carregando pontos...</span>
+        <div
+          className="spinner-border"
+          role="status"
+          style={{ color: "#2e7d32" }}
+        />
+        <span className="ms-2 text-success">Carregando pontos...</span>
       </div>
     );
   }
 
-  console.log("Distancias:", visitados);
-  console.log(
-    "Distancia usuario proximo ponto:",
-    calcularDistancia(
-      userLocation[0],
-      userLocation[1],
-      ponto.latitude,
-      ponto.longitude
-    )
-  );
+  if (!mapCenter) setMapCenter(userLocation);
 
   return (
-    <div className="container py-4">
-      <h1 className="mb-4">{trilha.nome}</h1>
-
-      <div className="row mb-3">
-        <div className="col-md-4">
-          <div className="card shadow-sm mb-3">
-            <div className="card-body">
-              <h5 className="card-title">Dificuldade</h5>
-              <p className="card-text">{trilha.dificuldade}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card shadow-sm mb-3">
-            <div className="card-body">
-              <h5 className="card-title">Duração</h5>
-              <p className="card-text">{trilha.duracao}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card shadow-sm mb-3">
-            <div className="card-body">
-              <h5 className="card-title">Tags</h5>
-              <p className="card-text">{trilha.tags.join(", ")}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-3 mb-4">
-        <label className="form-label">Tipo de mapa:</label>
-        <select
-          className="form-select"
-          value={mapType}
-          onChange={(e) => setMapType(e.target.value)}
+    <section
+      className="d-flex flex-column align-items-center"
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(to bottom, #f1f8e9, #c8e6c9)",
+        paddingTop: "60px",
+        paddingBottom: "60px",
+        paddingLeft: "15px",
+        paddingRight: "15px",
+      }}
+    >
+      <div className="container">
+        <h1
+          className="mb-4 text-center"
+          style={{ color: "#2e7d32", fontWeight: "700" }}
         >
-          <option value="standard">Padrão</option>
-          <option value="satellite">Satélite</option>
-        </select>
-      </div>
+          {trilha.nome}
+        </h1>
 
-      <div className="mb-5" style={{ position: "relative" }}>
-        <MapContainer
-          center={centro}
-          zoom={17}
-          style={{ height: "500px", width: "100%" }}
+        <div className="row g-3 mb-4">
+          {[
+            {
+              label: "Dificuldade",
+              value: trilha.dificuldade,
+            },
+            {
+              label: "Duração",
+              value: trilha.duracao,
+            },
+            {
+              label: "Tags",
+              value: trilha.tags.join(", "),
+            },
+          ].map(({ label, value }) => (
+            <div key={label} className="col-12 col-md-4">
+              <div
+                className="card shadow border-0 h-100"
+                style={{
+                  borderRadius: "16px",
+                  backgroundColor: "#ffffff",
+                }}
+              >
+                <div className="card-body text-center p-3">
+                  <h5
+                    className="card-title"
+                    style={{ color: "#2e7d32", fontWeight: "600" }}
+                  >
+                    {label}
+                  </h5>
+                  <p className="card-text text-muted mb-0">{value}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="mapTypeSelect"
+            className="form-label fw-bold"
+            style={{ color: "#2e7d32" }}
+          >
+            Tipo de mapa:
+          </label>
+          <select
+            id="mapTypeSelect"
+            className="form-select"
+            value={mapType}
+            onChange={(e) => setMapType(e.target.value)}
+            style={{ borderRadius: "12px" }}
+          >
+            <option value="standard">Padrão</option>
+            <option value="satellite">Satélite</option>
+          </select>
+        </div>
+
+        <div
+          className="mb-5"
+          style={{ borderRadius: "12px", overflow: "hidden" }}
         >
-          <TileLayer
-            url={tileLayerUrls[mapType].url}
-            attribution={tileLayerUrls[mapType].attribution}
-          />
+          <MapContainer
+            center={centro}
+            zoom={17}
+            style={{ height: "400px", width: "100%" }}
+          >
+            <TileLayer
+              url={tileLayerUrls[mapType].url}
+              attribution={tileLayerUrls[mapType].attribution}
+            />
+            {pontosOrdenados.map((ponto) => {
+              const liberado =
+                visitados.includes(ponto.order) || ponto.order === pontoAtual;
+              return (
+                liberado && (
+                  <Marker
+                    key={ponto.id}
+                    position={[ponto.latitude, ponto.longitude]}
+                    icon={L.divIcon({
+                      className: "",
+                      html: ReactDOMServer.renderToString(
+                        <BsGeoAltFill
+                          size={30}
+                          color={
+                            ponto.order === pontoAtual ? "#2e7d32" : "#81c784"
+                          }
+                        />
+                      ),
+                      iconSize: [30, 30],
+                      iconAnchor: [15, 30],
+                    })}
+                  >
+                    <Popup>
+                      <strong>{ponto.descricao}</strong>
+                      <br />
+                      {ponto.guia.descricao}
+                      <br />
+                      <small>Ordem: {ponto.order}</small>
+                    </Popup>
+                  </Marker>
+                )
+              );
+            })}
 
-          {pontosOrdenados.map((ponto) => {
-            const liberado =
-              visitados.includes(ponto.order) || ponto.order === pontoAtual;
-            return (
-              liberado && (
+            {userLocation && (
+              <>
                 <Marker
-                  key={ponto.id}
-                  position={[ponto.latitude, ponto.longitude]}
+                  position={userLocation}
                   icon={L.divIcon({
                     className: "",
                     html: ReactDOMServer.renderToString(
-                      <BsGeoAltFill
-                        size={30}
-                        color={ponto.order === pontoAtual ? "green" : "blue"}
-                      />
+                      <BsFillGeoFill size={30} color="#b03a2e" />
                     ),
                     iconSize: [30, 30],
                     iconAnchor: [15, 30],
                   })}
                 >
-                  <Popup>
-                    <strong>{ponto.descricao}</strong>
-                    <br />
-                    {ponto.guia.descricao}
-                    <br />
-                    <small>Ordem: {ponto.order}</small>
-                  </Popup>
+                  <Popup>Sua localização atual</Popup>
                 </Marker>
-              )
-            );
-          })}
+                <Circle
+                  center={userLocation}
+                  radius={2}
+                  pathOptions={{ color: "#b03a2e" }}
+                />
+              </>
+            )}
 
-          {userLocation && (
-            <>
-              <Marker
-                position={userLocation}
-                icon={L.divIcon({
-                  className: "",
-                  html: ReactDOMServer.renderToString(
-                    <BsFillGeoFill size={30} color="red" />
-                  ),
-                  iconSize: [30, 30],
-                  iconAnchor: [15, 30],
-                })}
-              >
-                <Popup>Sua localização atual</Popup>
-              </Marker>
-              <Circle
-                center={userLocation}
-                radius={2}
-                pathOptions={{ color: "red" }}
-              />
-            </>
-          )}
-        </MapContainer>
+            <RecenterMap center={mapCenter || centro} />
+          </MapContainer>
+        </div>
 
-        {mostrarPontoAtual && ponto && (
+        {mostrarPontoAtual && (
           <div
+            className="alert alert-success text-center"
+            role="alert"
             style={{
-              position: "fixed",
-              bottom: 20,
-              left: "50%",
-              transform: "translateX(-50%)",
-              backgroundColor: "white",
-              padding: 20,
-              borderRadius: 10,
-              boxShadow: "0 0 10px rgba(0,0,0,0.3)",
-              maxWidth: 400,
-              width: "90%",
-              zIndex: 9999,
-              textAlign: "center",
+              borderRadius: "12px",
+              fontWeight: "600",
+              backgroundColor: "#dcedc8",
+              color: "#33691e",
             }}
           >
-            <img
-              src={ponto.imagem}
-              alt={`Imagem do ponto ${ponto.order}`}
-              style={{ width: "100%", borderRadius: 8, marginBottom: 10 }}
-            />
-            <p>Imagem url: {ponto.imagem}</p>
-            <p>{ponto.descricao}</p>
+            <p>
+              Você está no ponto <strong>{pontoAtual}</strong>:{" "}
+              {ponto.descricao}
+            </p>
             <button
-              className="btn btn-primary"
+              className="btn btn-outline-success"
               onClick={irParaProximoPonto}
-              style={{ marginTop: 10 }}
             >
-              Ir para o próximo ponto
+              Ir para próximo ponto
             </button>
           </div>
         )}
-      </div>
 
-      <div>
-        <button onClick={() => setUsarPosicaoReal((prev) => !prev)}>
-          {usarPosicaoReal ? "Usar Posição Mockada" : "Usar Posição Real"}
+        <button
+          onClick={() => {
+            if (userLocation) setMapCenter(userLocation);
+          }}
+          title="Centralizar mapa na minha localização"
+        >
+          Centralizar no meu local
         </button>
 
+        <div className="d-flex justify-content-center gap-3 mt-3 flex-wrap">
+          <button
+            className={`btn btn-sm ${
+              usarPosicaoReal ? "btn-success" : "btn-outline-success"
+            }`}
+            onClick={() => setUsarPosicaoReal(true)}
+          >
+            Usar GPS real
+          </button>
+          <button
+            className={`btn btn-sm ${
+              !usarPosicaoReal ? "btn-success" : "btn-outline-success"
+            }`}
+            onClick={() => setUsarPosicaoReal(false)}
+          >
+            Usar posição fixa
+          </button>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
+
 
 const tileLayerUrls: Record<string, { url: string; attribution: string }> = {
   standard: {
