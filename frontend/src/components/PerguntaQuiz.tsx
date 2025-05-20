@@ -20,6 +20,7 @@ const PerguntaQuiz = ({ amostra_id, aoResponder }: PerguntaQuizProps) => {
     setOpcaoSelecionada(null);
 
     getAllData<QuizAmostra>("quiz/" + amostra_id).then((data) => {
+      console.log("Dados recebidos da API:", data);
       if (data) {
         setPerguntaQuiz(data);
 
@@ -28,6 +29,9 @@ const PerguntaQuiz = ({ amostra_id, aoResponder }: PerguntaQuizProps) => {
           data.resposta_incorreta_1,
           data.resposta_incorreta_2,
         ];
+
+        console.log("Respostas antes do shuffle:", respostas);
+
         setOpcoes(shuffleArray(respostas));
       }
     });
@@ -55,6 +59,9 @@ const PerguntaQuiz = ({ amostra_id, aoResponder }: PerguntaQuizProps) => {
 
   if (!perguntaQuiz) return <p>Carregando...</p>;
 
+  if (opcoes.length === 0)
+    return <p>Não há alternativas disponíveis para esta pergunta.</p>;
+
   return (
     <div style={{ marginTop: 20 }}>
       <p>
@@ -75,7 +82,7 @@ const PerguntaQuiz = ({ amostra_id, aoResponder }: PerguntaQuizProps) => {
                     ? "lightgreen"
                     : respondido && opcao === opcaoSelecionada && !acertou
                     ? "salmon"
-                    : "white",
+                    : "gray",
                 border: "1px solid #ccc",
                 borderRadius: 5,
                 fontSize: 16,

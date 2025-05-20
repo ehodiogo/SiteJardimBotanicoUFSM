@@ -5,7 +5,7 @@ import {
   tiposInstituicao,
   niveisInstituicao,
 } from "../form/AgendamentoForm";
-import "../css/estilos-Agendamento.css";
+import "../css/AgendamentoPage.css";
 
 const AgendamentoForm = () => {
   const [formData, setFormData] = useState({
