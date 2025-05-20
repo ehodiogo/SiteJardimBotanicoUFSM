@@ -1,0 +1,83 @@
+body {
+    background: linear-gradient(to bottom right, #f0f4f8, #e8f5e9); 
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+.agendamento-form {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff; 
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(23, 110, 11, 0.692); 
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.agendamento-title {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #2e7d32; 
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.agendamento-input,
+.agendamento-select,
+.agendamento-textarea {
+    padding: 12px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1.5px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s;
+    background-color: #fff;
+}
+
+.agendamento-input:focus,
+.agendamento-select:focus,
+.agendamento-textarea:focus {
+    border-color: #2e7d32; 
+    box-shadow: 0 0 5px rgba(9, 114, 40, 0.3);
+}
+
+.agendamento-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.agendamento-label {
+    font-weight: 600;
+    color: #555; 
+    margin-bottom: 6px;
+    display: block;
+}
+
+.agendamento-checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: #444;
+}
+
+.agendamento-button {
+    padding: 14px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    background-color: #2e7d32; 
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.agendamento-button:hover {
+    background-color: #81c784; 
+}

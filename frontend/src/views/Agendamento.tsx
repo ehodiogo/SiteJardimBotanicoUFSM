@@ -1,86 +1,11 @@
 import React, { useState } from "react";
-
-const tiposInstituicao = [
-  { value: "publica_municipal", label: "Pública Municipal" },
-  { value: "publica_estadual", label: "Pública Estadual" },
-  { value: "publica_federal", label: "Pública Federal" },
-  { value: "privada", label: "Privada" },
-  { value: "filantropica", label: "Filantrópica" },
-  { value: "outro", label: "Outro" },
-];
-
-const niveisInstituicao = [
-  { value: "infantil", label: "Educação Infantil" },
-  {
-    value: "fundamental_inicial",
-    label: "Educação Fundamental - Séries Iniciais",
-  },
-  { value: "fundamental_final", label: "Educação Fundamental - Séries Finais" },
-  { value: "medio", label: "Ensino Médio" },
-  { value: "superior", label: "Ensino Superior" },
-  { value: "nao_escolar", label: "Não escolar" },
-];
-
-const atividadesPrimarias = [
-  {
-    value: "caminhada_guiada",
-    label: "Caminhada guiada pelo Jardim Botânico (1h30-2h) - todas as idades",
-  },
-  {
-    value: "telhado_verde",
-    label: "Telhado verde e agenda 2030 (até 40 min) - a partir de 9 anos",
-  },
-  {
-    value: "jardim_sensorial",
-    label: "Jardim Sensorial (até 30 min) - todas as idades",
-  },
-  {
-    value: "exposicao_taxidermia",
-    label: "Exposição de animais taxidermizados - todas as idades",
-  },
-  {
-    value: "palestra_peconhentos",
-    label:
-      "Palestra sobre prevenção de acidentes com animais peçonhentos - a partir de 9 anos",
-  },
-  {
-    value: "chapeuzinho_verde",
-    label: "“Chapeuzinho Verde e o Jardim Encantado” (pré ao 2º ano)",
-  },
-  {
-    value: "horta_mandala",
-    label:
-      "Visita à horta mandala do Jardim Botânico - horta sustentável (terças de manhã)",
-  },
-  {
-    value: "artesanato_botanico",
-    label: "Artesanato botânico (terças de manhã e quartas à tarde)",
-  },
-  {
-    value: "culinaria_pancs",
-    label: "Culinária com PANCS (terças de manhã e quartas à tarde)",
-  },
-];
-
-const atividadesSecundarias = [
-  {
-    value: "caminhada_guiada",
-    label: "Caminhada guiada (1h30-2h) - a partir de 9 anos",
-  },
-  {
-    value: "telhado_verde",
-    label: "Telhado verde e agenda 2030 (até 40 min) - a partir de 9 anos",
-  },
-  { value: "jardim_sensorial", label: "Jardim Sensorial (até 30 min)" },
-  {
-    value: "exposicao_taxidermia",
-    label: "Exposição de animais taxidermizados",
-  },
-  {
-    value: "palestra_peconhentos",
-    label: "Palestra sobre acidentes com animais peçonhentos",
-  },
-];
+import {
+  atividadesPrimarias,
+  atividadesSecundarias,
+  tiposInstituicao,
+  niveisInstituicao,
+} from "../form/AgendamentoForm";
+import "../css/estilos-Agendamento.css";
 
 const AgendamentoForm = () => {
   const [formData, setFormData] = useState({
@@ -105,6 +30,7 @@ const AgendamentoForm = () => {
     conteudo_escolar: "",
     piquenique: false,
   });
+  const [, setBtnHover] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -125,7 +51,6 @@ const AgendamentoForm = () => {
       [name]: value,
     }));
   };
-  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,21 +66,11 @@ const AgendamentoForm = () => {
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => console.error("Erro ao enviar dados:", error));
-
-};
+  };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        maxWidth: 800,
-        margin: "0 auto",
-        display: "flex",
-        flexDirection: "column",
-        gap: 15,
-      }}
-    >
-      <h2>Agendamento de Visita</h2>
+    <form onSubmit={handleSubmit} className="agendamento-form">
+      <h2 className="agendamento-title">Agendamento de Visita</h2>
 
       <input
         name="email"
@@ -164,6 +79,7 @@ const AgendamentoForm = () => {
         value={formData.email}
         onChange={handleChange}
         required
+        className="agendamento-input"
       />
       <input
         name="telefone"
@@ -171,6 +87,7 @@ const AgendamentoForm = () => {
         value={formData.telefone}
         onChange={handleChange}
         required
+        className="agendamento-input"
       />
       <input
         name="nome_escola_instituto"
@@ -178,6 +95,7 @@ const AgendamentoForm = () => {
         value={formData.nome_escola_instituto}
         onChange={handleChange}
         required
+        className="agendamento-input"
       />
       <input
         name="nome_responsavel"
@@ -185,6 +103,7 @@ const AgendamentoForm = () => {
         value={formData.nome_responsavel}
         onChange={handleChange}
         required
+        className="agendamento-input"
       />
       <input
         name="municipio"
@@ -192,18 +111,21 @@ const AgendamentoForm = () => {
         value={formData.municipio}
         onChange={handleChange}
         required
+        className="agendamento-input"
       />
       <input
         name="endereco_escola_instituto"
         placeholder="Endereço da escola (opcional)"
         value={formData.endereco_escola_instituto}
         onChange={handleChange}
+        className="agendamento-input"
       />
 
       <select
         name="tipo_institituicao"
         value={formData.tipo_institituicao}
         onChange={handleChange}
+        className="agendamento-select"
       >
         {tiposInstituicao.map((op) => (
           <option key={op.value} value={op.value}>
@@ -216,6 +138,7 @@ const AgendamentoForm = () => {
         name="nivel_instituicao"
         value={formData.nivel_instituicao}
         onChange={handleChange}
+        className="agendamento-select"
       >
         {niveisInstituicao.map((op) => (
           <option key={op.value} value={op.value}>
@@ -229,42 +152,47 @@ const AgendamentoForm = () => {
         placeholder="Ano/Série/Semestre/Turma"
         value={formData.ano_serie_semestre_turma}
         onChange={handleChange}
+        className="agendamento-input"
       />
       <input
         name="numero_previsto_visitantes"
         placeholder="Nº previsto de visitantes"
         value={formData.numero_previsto_visitantes}
         onChange={handleChange}
+        className="agendamento-input"
       />
 
-      <label>Data do agendamento</label>
+      <label className="agendamento-label">Data do agendamento</label>
       <input
         name="data_agendamento"
         type="date"
         value={formData.data_agendamento}
         onChange={handleChange}
         required
+        className="agendamento-input"
       />
 
-      <label>Tempo disponível</label>
+      <label className="agendamento-label">Tempo disponível</label>
       <input
         name="tempo_disponivel"
         type="time"
         value={formData.tempo_disponivel}
         onChange={handleChange}
         required
+        className="agendamento-input"
       />
 
-      <label>Horário pretendido</label>
+      <label className="agendamento-label">Horário pretendido</label>
       <input
         name="horario_pretendido"
         type="time"
         value={formData.horario_pretendido}
         onChange={handleChange}
         required
+        className="agendamento-input"
       />
 
-      <label>
+      <label className="agendamento-checkbox-container">
         <input
           name="necessaria_adaptacao"
           type="checkbox"
@@ -278,16 +206,18 @@ const AgendamentoForm = () => {
         placeholder="Descreva a adaptação necessária"
         value={formData.adaptacao_descricao}
         onChange={handleChange}
+        disabled={!formData.necessaria_adaptacao}
+        className="agendamento-textarea"
       />
-
-      <label>Primeira Atividade</label>
+      <label className="agendamento-label">Escolha a primeira atividade</label>
       <select
         name="primeira_atividade"
         value={formData.primeira_atividade}
         onChange={handleChange}
         required
+        className="agendamento-select"
       >
-        <option value="">Selecione...</option>
+        <option value="">Selecione uma atividade</option>
         {atividadesPrimarias.map((op) => (
           <option key={op.value} value={op.value}>
             {op.label}
@@ -295,14 +225,15 @@ const AgendamentoForm = () => {
         ))}
       </select>
 
-      <label>Segunda Atividade</label>
+      <label className="agendamento-label">Escolha a segunda atividade</label>
       <select
         name="segunda_atividade"
         value={formData.segunda_atividade}
         onChange={handleChange}
         required
+        className="agendamento-select"
       >
-        <option value="">Selecione...</option>
+        <option value="">Selecione uma atividade</option>
         {atividadesSecundarias.map((op) => (
           <option key={op.value} value={op.value}>
             {op.label}
@@ -310,33 +241,42 @@ const AgendamentoForm = () => {
         ))}
       </select>
 
-      <label>
+      <label className="agendamento-checkbox-container">
         <input
           name="aliar_conteudo_escolar"
           type="checkbox"
           checked={formData.aliar_conteudo_escolar}
           onChange={handleChange}
         />
-        Deseja aliar o conteúdo escolar?
+        Aliar ao conteúdo escolar?
       </label>
       <textarea
         name="conteudo_escolar"
-        placeholder="Conteúdo escolar relacionado"
+        placeholder="Informe o conteúdo escolar a ser aliado"
         value={formData.conteudo_escolar}
         onChange={handleChange}
+        disabled={!formData.aliar_conteudo_escolar}
+        className="agendamento-textarea"
       />
 
-      <label>
+      <label className="agendamento-checkbox-container">
         <input
           name="piquenique"
           type="checkbox"
           checked={formData.piquenique}
           onChange={handleChange}
         />
-        Haverá piquenique?
+        Levar piquenique?
       </label>
 
-      <button type="submit">Enviar Agendamento</button>
+      <button
+        type="submit"
+        className="agendamento-button"
+        onMouseEnter={() => setBtnHover(true)}
+        onMouseLeave={() => setBtnHover(false)}
+      >
+        Enviar
+      </button>
     </form>
   );
 };
