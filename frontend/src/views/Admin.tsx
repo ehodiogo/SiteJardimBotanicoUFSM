@@ -1,149 +1,178 @@
-import { useEffect, useState } from "react";
-import { getAllData } from "../services/Api";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Amostra from "../types/Amostra";
-import QuizAmostra from "../types/QuizAmostra";
-import { Trilha } from "../types/Trilha";
+import React, { useState } from "react";
+import {
+  FaUserCheck,
+  FaCalendarAlt,
+  FaUserGraduate,
+  FaClock,
+  FaFlask,
+  FaDatabase,
+  FaMapPin,
+  FaMapSigns,
+  FaQuestionCircle,
+  FaTags,
+  FaUniversalAccess,
+  FaCogs,
+} from "react-icons/fa";
 
-export default function AdminPanel() {
-  const [amostras, setAmostras] = useState<Amostra[]>([]);
-  const [quizzes, setQuizzes] = useState<QuizAmostra[]>([]);
-  const [trilhas, setTrilhas] = useState<Trilha[]>([]);
-  const [abaAtiva, setAbaAtiva] = useState<"amostras" | "quizzes" | "trilhas">(
-    "amostras"
-  );
+import PresencaTab from "../tabs/Presenca";
+import AgendamentoTab from "../tabs/Agendamento";
+import BolsistaTab from "../tabs/Bolsista";
+import HorariosBolsistaTab from "../tabs/HorariosBolsista";
+import AmostraTab from "../tabs/Amostra";
+import DadosCientificosTab from "../tabs/DadosCientificos";
+import PontoTab from "../tabs/Ponto";
+import TrilhaTab from "../tabs/Trilha";
+import QuizTab from "../tabs/Quiz";
+import TagTab from "../tabs/Tag";
+import AcessibilidadeTab from "../tabs/Acessibilidade";
+import ConfiguracaoJBTab from "../tabs/ConfiguracaoJB";
 
-  useEffect(() => {
-    getAllData<Amostra[]>("amostras").then((res) => {
-      if (res) setAmostras(res);
-    });
+const AdminTabs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<string>("");
 
-    getAllData<QuizAmostra[]>("quiz").then((res) => {
-      if (res) setQuizzes(res);
-    });
+  const tabs = [
+    { id: "presenca", label: "Presença", icon: <FaUserCheck /> },
+    { id: "agendamento", label: "Agendamento", icon: <FaCalendarAlt /> },
+    { id: "bolsista", label: "Bolsista", icon: <FaUserGraduate /> },
+    { id: "horarios-bolsista", label: "Horários Bolsista", icon: <FaClock /> },
+    { id: "amostra", label: "Amostra", icon: <FaFlask /> },
+    {
+      id: "dados-cientificos",
+      label: "Dados Científicos",
+      icon: <FaDatabase />,
+    },
+    { id: "ponto", label: "Ponto", icon: <FaMapPin /> },
+    { id: "trilha", label: "Trilha", icon: <FaMapSigns /> },
+    { id: "quiz", label: "Quiz", icon: <FaQuestionCircle /> },
+    { id: "tag", label: "Tag", icon: <FaTags /> },
+    {
+      id: "acessibilidade",
+      label: "Acessibilidade",
+      icon: <FaUniversalAccess />,
+    },
+    { id: "configuracao-jb", label: "Configuração JB", icon: <FaCogs /> },
+  ];
 
-    getAllData<Trilha[]>("trilhas").then((res) => {
-      if (res) setTrilhas(res);
-    });
-  }, []);
+  const renderTabContent = () => {
+    if (!activeTab) {
+      return (
+        <div style={{ textAlign: "center", padding: "2rem", color: "#555" }}>
+          <h3>Bem-vindo ao Painel Administrativo do Jardim Botânico da UFSM</h3>
+          <p>
+            Aqui você pode gerenciar as principais funcionalidades do sistema,
+            como controle de presença, agendamentos, bolsistas, dados
+            científicos, trilhas e mais.
+          </p>
+          <p>
+            Use a barra lateral para navegar pelas seções disponíveis. Basta
+            clicar em um item para começar!
+          </p>
+        </div>
+      );
+    }
+
+    switch (activeTab) {
+      case "presenca":
+        return <PresencaTab />;
+      case "agendamento":
+        return <AgendamentoTab />;
+      case "bolsista":
+        return <BolsistaTab />;
+      case "horarios-bolsista":
+        return <HorariosBolsistaTab />;
+      case "amostra":
+        return <AmostraTab />;
+      case "dados-cientificos":
+        return <DadosCientificosTab />;
+      case "ponto":
+        return <PontoTab />;
+      case "trilha":
+        return <TrilhaTab />;
+      case "quiz":
+        return <QuizTab />;
+      case "tag":
+        return <TagTab />;
+      case "acessibilidade":
+        return <AcessibilidadeTab />;
+      case "configuracao-jb":
+        return <ConfiguracaoJBTab />;
+      default:
+        return <p>Seção não encontrada.</p>;
+    }
+  };
+
 
   return (
-    <div className="container mt-5">
-      <h1 className="mb-4">Administração</h1>
+    <div style={{ display: "flex", height: "100vh" }}>
+      <aside
+        style={{
+          width: "220px",
+          backgroundColor: "#2e7d32",
+          color: "white",
+          display: "flex",
+          flexDirection: "column",
+          padding: "1rem 0",
+          position: "sticky",
+          top: 0,
+        }}
+      >
+        <h2
+          style={{
+            textAlign: "center",
+            marginBottom: "1.5rem",
+            fontSize: "1.25rem",
+          }}
+        >
+        </h2>
+        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          {tabs.map(({ id, label, icon }) => (
+            <li key={id}>
+              <button
+                onClick={() => setActiveTab(id)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
+                  padding: "0.75rem 1rem",
+                  backgroundColor: activeTab === id ? "#1b5e20" : "transparent",
+                  color: "white",
+                  border: "none",
+                  textAlign: "left",
+                  cursor: "pointer",
+                  fontWeight: activeTab === id ? "bold" : "normal",
+                  gap: "0.75rem",
+                  transition: "background-color 0.3s ease",
+                }}
+              >
+                <span>{icon}</span> {label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </aside>
 
-      <ul className="nav nav-tabs mb-4">
-        <li className="nav-item">
-          <button
-            className={`nav-link ${abaAtiva === "amostras" ? "active" : ""}`}
-            onClick={() => setAbaAtiva("amostras")}
-          >
-            Amostras
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${abaAtiva === "quizzes" ? "active" : ""}`}
-            onClick={() => setAbaAtiva("quizzes")}
-          >
-            Quiz de Amostras
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${abaAtiva === "trilhas" ? "active" : ""}`}
-            onClick={() => setAbaAtiva("trilhas")}
-          >
-            Trilhas
-          </button>
-        </li>
-      </ul>
-
-      {abaAtiva === "amostras" && (
-        <div>
-          <h2>Amostras</h2>
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome Científico</th>
-                <th>Nome Popular</th>
-                <th>Imagem</th>
-              </tr>
-            </thead>
-            <tbody>
-              {amostras.map((a) => (
-                <tr key={a.id}>
-                  <td>{a.id}</td>
-                  <td>{a.nome_cientifico}</td>
-                  <td>{a.nome_popular}</td>
-                  <td>
-                    <img
-                      src={a.imagem_url}
-                      alt={a.nome_popular}
-                      style={{ width: 80 }}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <main
+        style={{
+          flex: 1,
+          padding: "2rem",
+          backgroundColor: "#f4f4f4",
+          overflowY: "auto",
+        }}
+      >
+        <div
+          className="card shadow-sm p-4"
+          style={{
+            backgroundColor: "white",
+            borderRadius: "0.75rem",
+            minHeight: "300px",
+            maxWidth: "100%",
+          }}
+        >
+          {renderTabContent()}
         </div>
-      )}
-
-      {abaAtiva === "quizzes" && (
-        <div>
-          <h2>Quizzes</h2>
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Pergunta</th>
-                <th>Resposta Correta</th>
-                <th>Amostra</th>
-              </tr>
-            </thead>
-            <tbody>
-              {quizzes.map((q) => (
-                console.log(q),
-                <tr key={q.id}>
-                  <td>{q.id}</td>
-                  <td>{q.pergunta}</td>
-                  <td>{q.resposta_correta}</td>
-                  <td>{q.amostra.id}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {abaAtiva === "trilhas" && (
-        <div>
-          <h2>Trilhas</h2>
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Duração</th>
-                <th>Dificuldade</th>
-                <th>Tags</th>
-              </tr>
-            </thead>
-            <tbody>
-              {trilhas.map((t) => (
-                <tr key={t.id}>
-                  <td>{t.id}</td>
-                  <td>{t.nome}</td>
-                  <td>{t.duracao}</td>
-                  <td>{t.dificuldade}</td>
-                  <td>{t.tags.join(", ")}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      </main>
     </div>
   );
-}
+};
+
+export default AdminTabs;
