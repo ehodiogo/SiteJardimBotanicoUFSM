@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Bolsista, HorarioBolsista
 
-# Register your models here.
+admin.site.register(HorarioBolsista)
+admin.site.register(Bolsista)
