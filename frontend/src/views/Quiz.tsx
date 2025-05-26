@@ -5,9 +5,30 @@ const Quiz = () => {
   const [perguntaAtual, setPerguntaAtual] = useState(0);
   const [pontuacao, setPontuacao] = useState(0);
 
-  const idsArmazenados = JSON.parse(
-    localStorage.getItem("amostrasAnalisadas") || "[]"
-  );
+  const [idsArmazenados] = useState<number[]>(() => {
+    try {
+      const data = localStorage.getItem("amostrasAnalisadas");
+      if (!data) return [];
+      const parsed = JSON.parse(data);
+
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        Array.isArray(parsed.valores)
+      ) {
+        return parsed.valores;
+      }
+
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+
+      return [];
+    } catch {
+      return [];
+    }
+  });
+  
 
   if (!Array.isArray(idsArmazenados) || idsArmazenados.length === 0) {
     return <div className="quiz-sem-perguntas">Sem perguntas para o quiz.</div>;

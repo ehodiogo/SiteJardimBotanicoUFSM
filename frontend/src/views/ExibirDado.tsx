@@ -10,14 +10,21 @@ const ExibirDado: React.FC = () => {
 
   const armazenarIdNoLocalStorage = useCallback((id: number) => {
     const armazenadas = localStorage.getItem("amostrasAnalisadas");
-    const ids: number[] = armazenadas ? JSON.parse(armazenadas) : [];
+    const dados = armazenadas ? JSON.parse(armazenadas) : { valores: [] };
 
-    if (!ids.includes(id)) {
-      ids.push(id);
-      localStorage.setItem("amostrasAnalisadas", JSON.stringify(ids));
+    if (!Array.isArray(dados.valores)) {
+      dados.valores = [];
     }
-  }, []);
 
+    if (!dados.valores.includes(id)) {
+      dados.valores.push(id);
+    }
+
+    dados.ultimaAtualizacao = new Date().toISOString();
+
+    localStorage.setItem("amostrasAnalisadas", JSON.stringify(dados));
+  }, []);
+  
   useEffect(() => {
     if (!id) return;
 

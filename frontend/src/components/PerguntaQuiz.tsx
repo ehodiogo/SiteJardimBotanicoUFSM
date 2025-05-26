@@ -19,23 +19,21 @@ const PerguntaQuiz = ({ amostra_id, aoResponder }: PerguntaQuizProps) => {
     setAcertou(null);
     setOpcaoSelecionada(null);
 
-    getAllData<QuizAmostra>("quiz/" + amostra_id).then((data) => {
-      console.log("Dados recebidos da API:", data);
-      if (data) {
-        setPerguntaQuiz(data);
+    getAllData<QuizAmostra[]>("quiz/amostra/" + amostra_id).then((data) => {
+      if (data && data.length > 0) {
+        const primeiraPergunta = data[0];
+        setPerguntaQuiz(primeiraPergunta);
 
         const respostas = [
-          data.resposta_correta,
-          data.resposta_incorreta_1,
-          data.resposta_incorreta_2,
+          primeiraPergunta.resposta_correta,
+          primeiraPergunta.resposta_incorreta_1,
+          primeiraPergunta.resposta_incorreta_2,
         ];
-
-        console.log("Respostas antes do shuffle:", respostas);
 
         setOpcoes(shuffleArray(respostas));
       }
     });
-  }, [amostra_id]);
+  }, [amostra_id]);  
 
   function shuffleArray(array: string[]) {
     const arr = [...array];
