@@ -20,6 +20,7 @@ const ExibirDados: React.FC = () => {
             console.log(item),
           <li key={item.id}>
             <strong>{item.nome_cientifico}</strong>: {item.descricao}
+            <img src={item.imagem} alt={item.nome_cientifico} />
             <button onClick={() => falarTexto(item.descricao_acessivel)}>Falar</button>
           </li>
         ))}
