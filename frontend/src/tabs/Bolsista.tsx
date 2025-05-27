@@ -18,6 +18,7 @@ export default function TelaAmostra() {
         entityName="Bolsista"
         apiUrl="http://localhost:8000/api/bolsistas"
         schema={bolsistaSchema}
+        displayField={(item) => `${item.nome} - ${item.matricula} - ${item.curso}`}
       />
     </div>
   );

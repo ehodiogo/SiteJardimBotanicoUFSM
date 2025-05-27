@@ -33,6 +33,7 @@ export default function TelaAgendamento() {
         entityName="Agendamento"
         apiUrl="http://localhost:8000/api/agendamentos"
         schema={agendamentoSchema}
+        displayField={(item) => `${item.nome_responsavel} - ${item.data_agendamento}`}
       />
     </div>
   );

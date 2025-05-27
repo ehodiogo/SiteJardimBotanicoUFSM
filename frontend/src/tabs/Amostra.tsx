@@ -23,6 +23,9 @@ export default function TelaAmostra() {
         entityName="Amostra"
         apiUrl="http://localhost:8000/api/amostras"
         schema={amostraSchema}
+        displayField={(item) =>
+          `${item.nome_popular} - ${item.nome_cientifico}`
+        } 
       />
     </div>
   );

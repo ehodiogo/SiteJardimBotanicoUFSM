@@ -1,18 +1,21 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { SchemaField } from "../functions/SchemaField";
+import ExpandableText from "./ExpandableText";
 
 type TabType = "listar" | "criar" | "editar" | "remover";
 
 interface GenericCrudProps<T extends { id: number }> {
   entityName: string;
   apiUrl: string;
-  schema: readonly SchemaField<T>[]; 
-}  
+  schema: readonly SchemaField<T>[];
+  displayField?: keyof T | ((item: T) => string); // aceita chave ou função
+}
 
 const GenericCrud = <T extends { id: number }>({
   entityName,
   apiUrl,
   schema,
+  displayField,
 }: GenericCrudProps<T>) => {
   const [activeTab, setActiveTab] = useState<TabType>("listar");
   const [dados, setDados] = useState<T[]>([]);
@@ -20,8 +23,10 @@ const GenericCrud = <T extends { id: number }>({
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Estado para linha clicada na listagem
+  const [selectedRow, setSelectedRow] = useState<T | null>(null);
+
   const fetchDados = useCallback(async () => {
-    console.log("API URL:", apiUrl);
     setLoading(true);
     try {
       const res = await fetch(apiUrl);
@@ -42,6 +47,7 @@ const GenericCrud = <T extends { id: number }>({
       activeTab === "remover"
     ) {
       fetchDados();
+      setSelectedRow(null); // Limpa seleção ao trocar aba
     }
   }, [activeTab, fetchDados]);
 
@@ -56,7 +62,7 @@ const GenericCrud = <T extends { id: number }>({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (!schema.some((f) => f.name === name)) return; 
+    if (!schema.some((f) => f.name === name)) return;
 
     const fieldType = schema.find((f) => f.name === name)?.type;
 
@@ -66,54 +72,30 @@ const GenericCrud = <T extends { id: number }>({
     }));
   };
 
-  const handleCreate = async () => {
-    try {
-      const res = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error("Erro ao criar");
-      alert(`${entityName} criado com sucesso!`);
-      setForm({});
-      setActiveTab("listar");
-    } catch (e) {
-      alert(e);
+  // Função para renderizar o texto no select
+  const renderDisplayField = (item: T) => {
+    if (!displayField) {
+      // Se não passou nada, usa o primeiro campo do schema
+      return String(item[schema[0].name]);
+    }
+    if (typeof displayField === "function") {
+      return displayField(item);
+    }
+    // se for string (keyof T)
+    return String(item[displayField]);
+  };
+
+  // Função para clicar na linha da tabela
+  const handleRowClick = (item: T) => {
+    // Se clicar na mesma linha desmarca, senão marca novo item
+    if (selectedRow?.id === item.id) {
+      setSelectedRow(null);
+    } else {
+      setSelectedRow(item);
     }
   };
 
-  const handleEdit = async () => {
-    if (selectedId === null) return;
-    try {
-      const res = await fetch(`${apiUrl}/${selectedId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error("Erro ao editar");
-      alert(`${entityName} atualizado com sucesso!`);
-      setForm({});
-      setSelectedId(null);
-      setActiveTab("listar");
-    } catch (e) {
-      alert(e);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (selectedId === null) return;
-    try {
-      const res = await fetch(`${apiUrl}/${selectedId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Erro ao deletar");
-      alert(`${entityName} removido com sucesso!`);
-      setSelectedId(null);
-      setActiveTab("listar");
-    } catch (e) {
-      alert(e);
-    }
-  };
+  console.log("Items: ", dados);
 
   return (
     <div className="container py-4">
@@ -152,46 +134,79 @@ const GenericCrud = <T extends { id: number }>({
               <table className="table table-striped table-bordered">
                 <thead>
                   <tr>
-                    {schema.map(({ name, label }) => (
-                      <th key={name.toString()}>{label}</th>
-                    ))}
+                    {schema
+                      .filter(({ name }) => name !== "id")
+                      .map(({ name, label }) => (
+                        <th key={name.toString()}>{label}</th>
+                      ))}
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((item) => (
-                    <tr key={item.id}>
-                      {schema.map(({ name }) => (
-                        <td key={name.toString()}>{String(item[name])}</td>
-                      ))}
+                    <tr
+                      key={item.id}
+                      onClick={() => handleRowClick(item)}
+                      style={{
+                        cursor: "pointer",
+                        backgroundColor:
+                          selectedRow?.id === item.id ? "#e9ecef" : undefined,
+                      }}
+                    >
+                      {schema
+                        .filter(({ name }) => name !== "id")
+                        .map(({ name }) => (
+                          <td key={name.toString()}>
+                            <ExpandableText text={String(item[name])} />
+                          </td>
+                        ))}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+
+            {selectedRow && (
+              <div className="card mt-4 p-3 border-primary">
+                <h5 className="mb-3">Detalhes </h5>
+                {schema.map(({ name, label }) => (
+                  <div key={label} className="mb-2">
+                    <strong>{label}:</strong> {String(selectedRow[name])}
+                  </div>
+                ))}
+                <button
+                  className="btn btn-outline-secondary btn-sm mt-2"
+                  onClick={() => setSelectedRow(null)}
+                >
+                  Fechar
+                </button>
+              </div>
+            )}
           </div>
         ) : activeTab === "criar" ? (
           <div>
             <h4 className="mb-3 text-center">Criar Novo {entityName}</h4>
             <div className="row g-2 justify-content-center">
-              {schema.map(({ name, label, type }) => (
-                <div
-                  key={name.toString()}
-                  className={`col-md-${type === "number" ? 3 : 4}`}
-                >
-                  <input
-                    name={name.toString()}
-                    placeholder={label}
-                    type={type === "number" ? "number" : "text"}
-                    className="form-control"
-                    value={
-                      form[name] !== undefined && form[name] !== null
-                        ? String(form[name])
-                        : ""
-                    }
-                    onChange={handleChange}
-                  />
-                </div>
-              ))}
+              {schema
+                .filter(({ name }) => name !== "id")
+                .map(({ name, label, type }) => (
+                  <div
+                    key={name.toString()}
+                    className={`col-md-${type === "number" ? 3 : 4}`}
+                  >
+                    <input
+                      name={name.toString()}
+                      placeholder={label}
+                      type={type === "number" ? "number" : "text"}
+                      className="form-control"
+                      value={
+                        form[name] !== undefined && form[name] !== null
+                          ? String(form[name])
+                          : ""
+                      }
+                      onChange={handleChange}
+                    />
+                  </div>
+                ))}
               <div className="col-md-2 text-center">
                 <button
                   className="btn btn-success w-100"
@@ -214,38 +229,40 @@ const GenericCrud = <T extends { id: number }>({
                 <option value="">Selecione</option>
                 {dados.map((d) => (
                   <option key={d.id} value={d.id}>
-                    {String(d[schema[0].name])}
+                    {renderDisplayField(d)}
                   </option>
                 ))}
               </select>
             </div>
             {selectedId && (
               <div className="row g-2 justify-content-center">
-                {schema.map(({ name, label, type }) => (
-                  <div
-                    key={name.toString()}
-                    className={`col-md-${type === "number" ? 3 : 4}`}
-                  >
-                    <input
-                      name={name.toString()}
-                      placeholder={label}
-                      type={type === "number" ? "number" : "text"}
-                      className="form-control"
-                      value={
-                        form[name] !== undefined && form[name] !== null
-                          ? String(form[name])
-                          : ""
-                      }
-                      onChange={handleChange}
-                    />
-                  </div>
-                ))}
+                {schema
+                  .filter(({ name }) => name !== "id")
+                  .map(({ name, label, type }) => (
+                    <div
+                      key={name.toString()}
+                      className={`col-md-${type === "number" ? 3 : 4}`}
+                    >
+                      <input
+                        name={name.toString()}
+                        placeholder={label}
+                        type={type === "number" ? "number" : "text"}
+                        className="form-control"
+                        value={
+                          form[name] !== undefined && form[name] !== null
+                            ? String(form[name])
+                            : ""
+                        }
+                        onChange={handleChange}
+                      />
+                    </div>
+                  ))}
                 <div className="col-md-2 text-center">
                   <button
                     className="btn btn-primary w-100"
                     onClick={handleEdit}
                   >
-                    Salvar
+                    Atualizar
                   </button>
                 </div>
               </div>
@@ -254,39 +271,84 @@ const GenericCrud = <T extends { id: number }>({
         ) : activeTab === "remover" ? (
           <div>
             <h4 className="mb-3 text-center">Remover {entityName}</h4>
-            <div className="row g-2 justify-content-center">
-              <div className="col-md-6">
-                <select
-                  className="form-select"
-                  onChange={(e) =>
-                    setSelectedId(Number(e.target.value) || null)
-                  }
-                  value={selectedId ?? ""}
-                >
-                  <option value="">Selecione</option>
-                  {dados.map((d) => (
-                    <option key={d.id} value={d.id}>
-                      {String(d[schema[0].name])}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {selectedId && (
-                <div className="col-md-2 text-center">
-                  <button
-                    className="btn btn-danger w-100"
-                    onClick={handleDelete}
-                  >
-                    Remover
-                  </button>
-                </div>
-              )}
+            <div className="mb-3 text-center">
+              <select
+                className="form-select w-50 mx-auto"
+                onChange={(e) => setSelectedId(Number(e.target.value) || null)}
+                value={selectedId ?? ""}
+              >
+                <option value="">Selecione</option>
+                {dados.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {renderDisplayField(d)}
+                  </option>
+                ))}
+              </select>
             </div>
+            {selectedId && (
+              <div className="text-center">
+                <button className="btn btn-danger" onClick={handleDelete}>
+                  Remover
+                </button>
+              </div>
+            )}
           </div>
         ) : null}
       </div>
     </div>
   );
+
+  // Funções para criar, editar e remover (você já deve ter implementado)
+  async function handleCreate() {
+    try {
+      const res = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Erro ao criar");
+      setForm({});
+      fetchDados();
+      setActiveTab("listar");
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  async function handleEdit() {
+    if (!selectedId) return;
+    try {
+      const res = await fetch(`${apiUrl}/${selectedId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Erro ao atualizar");
+      setSelectedId(null);
+      setForm({});
+      fetchDados();
+      setActiveTab("listar");
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  async function handleDelete() {
+    if (!selectedId) return;
+    if (!window.confirm(`Confirma remover o ${entityName} selecionado?`))
+      return;
+    try {
+      const res = await fetch(`${apiUrl}/${selectedId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Erro ao remover");
+      setSelectedId(null);
+      fetchDados();
+      setActiveTab("listar");
+    } catch (error) {
+      alert(error);
+    }
+  }
 };
 
 export default GenericCrud;
