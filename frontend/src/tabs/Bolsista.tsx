@@ -1,62 +1,24 @@
-import { useEffect, useState } from "react";
+import GenericCrud from "../components/GenericCrud";
+import { SchemaField } from "../functions/SchemaField";
 import { Bolsista } from "../types/Bolsista";
-import { getAllData } from "../services/Api";
 
-const diasSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const bolsistaSchema: readonly SchemaField<Bolsista>[] = [
+  { name: "id", label: "ID", type: "number" },
+  { name: "nome", label: "Nome", type: "string" },
+  { name: "email", label: "Email", type: "string" },
+  { name: "matricula", label: "Matricula", type: "string" },
+  { name: "curso", label: "Curso", type: "string" },
+  { name: "periodo", label: "Periodo", type: "string" },
+];
 
-const formatarHorario = (hora: string) => hora.substring(0, 5);
-
-const BolsistaTab = () => {
-  const [bolsistas, setBolsistas] = useState<Bolsista[]>([]);
-
-  useEffect(() => {
-    getAllData<Bolsista[]>("bolsistas").then((res) => {
-      if (res) setBolsistas(res);
-    });
-  }, []);
-
+export default function TelaAmostra() {
   return (
-    <div className="table-responsive">
-      <table className="table table-striped table-bordered align-middle">
-        <thead className="table-danger">
-          <tr>
-            <th>Matrícula</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Curso</th>
-            <th>Período</th>
-            <th>Horários</th>
-          </tr>
-        </thead>
-        <tbody>
-          {bolsistas.map((b) => (
-            <tr key={b.id}>
-              <td>{b.matricula}</td>
-              <td>{b.nome}</td>
-              <td>{b.email}</td>
-              <td>{b.curso}</td>
-              <td>{b.periodo}</td>
-              <td>
-                {b.horarios && b.horarios.length > 0 ? (
-                  <ul className="list-unstyled mb-0">
-                    {b.horarios.map((h) => (
-                      <li key={h.id}>
-                        {diasSemana[h.dia_semana]}:{" "}
-                        {formatarHorario(h.horario_inicio)} -{" "}
-                        {formatarHorario(h.horario_fim)}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <span className="text-muted">Sem horários</span>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div>
+      <GenericCrud<Bolsista>
+        entityName="Bolsista"
+        apiUrl="http://localhost:8000/api/bolsistas"
+        schema={bolsistaSchema}
+      />
     </div>
   );
-};
-
-export default BolsistaTab;
+}

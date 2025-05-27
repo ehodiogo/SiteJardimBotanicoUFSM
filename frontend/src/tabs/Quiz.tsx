@@ -1,7 +1,24 @@
-const QuizTab = () => {
-    return (
-        <div>Quiz</div>
-    );
-}
+import GenericCrud from "../components/GenericCrud";
+import { SchemaField } from "../functions/SchemaField";
+import QuizAmostra from "../types/QuizAmostra";
 
-export default QuizTab;
+const quizSchema: readonly SchemaField<QuizAmostra>[] = [
+  { name: "id", label: "ID", type: "number" },
+  { name: "pergunta", label: "Pergunta", type: "string" },
+  { name: "resposta_correta", label: "Resposta Correta", type: "string" },
+  { name: "resposta_incorreta_1", label: "Resposta Incorreta 1", type: "string" },
+  { name: "resposta_incorreta_2", label: "Resposta Incorreta 2", type: "string" },
+  { name: "amostra", label: "Amostra", type: "string" },
+];
+
+export default function TelaAmostra() {
+  return (
+    <div>
+      <GenericCrud<QuizAmostra>
+        entityName="Quizes"
+        apiUrl="http://localhost:8000/api/quiz"
+        schema={quizSchema}
+      />
+    </div>
+  );
+}

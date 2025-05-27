@@ -1,168 +1,39 @@
-import { getAllData } from "../services/Api";
-import { useEffect, useState } from "react";
+import GenericCrud from "../components/GenericCrud";
+import { SchemaField } from "../functions/SchemaField";
 import { Agendamento } from "../types/Agendamento";
 
-const AgendamentoTab = () => {
-  const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
-  const [agendamentoSelecionado, setAgendamentoSelecionado] =
-    useState<Agendamento | null>(null);
+const agendamentoSchema: readonly SchemaField<Agendamento>[] = [
+  { name: "id", label: "ID", type: "number" },
+  { name: "email", label: "Email", type: "string" },
+  { name: "telefone", label: "Telefone", type: "string" },
+  { name: "nome_escola_instituto", label: "Nome da Escola/Instituto", type: "string" },
+  { name: "nome_responsavel", label: "Nome do Responsável", type: "string" },
+  { name: "municipio", label: "Município", type: "string" },
+  { name: "endereco_escola_instituto", label: "Endereço da Escola/Instituto", type: "string" },
+  { name: "tipo_institituicao", label: "Tipo de Instituição", type: "string" },
+  { name: "nivel_instituicao", label: "Nível da Instituição", type: "string" },
+  { name: "ano_serie_semestre_turma", label: "Ano/Série/Semestre/Turma", type: "string" },
+  { name: "numero_previsto_visitantes", label: "Número de Visitantes Previsto", type: "string" },
+  { name: "data_agendamento", label: "Data do Agendamento", type: "string" },
+  { name: "tempo_disponivel", label: "Tempo Disponível", type: "string" },
+  { name: "horario_pretendido", label: "Horário Pretendido", type: "string" },
+  { name: "necessaria_adaptacao", label: "Necessária Adaptação", type: "boolean" },
+  { name: "adaptacao_descricao", label: "Descrição da Adaptação", type: "string" },
+  { name: "primeira_atividade", label: "Primeira Atividade", type: "string" },
+  { name: "segunda_atividade", label: "Segunda Atividade", type: "string" },
+  { name: "aliar_conteudo_escolar", label: "Aliar Conteudo Escolar", type: "boolean" },
+  { name: "conteudo_escolar", label: "Conteudo Escolar", type: "string" },
+  { name: "piquenique", label: "Piquenique", type: "boolean" },
+];
 
-  useEffect(() => {
-    getAllData<Agendamento[]>("agendamentos").then((res) => {
-      if (res) setAgendamentos(res);
-    });
-  }, []);
-
-  const selecionarAgendamento = (agendamento: Agendamento) => {
-    setAgendamentoSelecionado(agendamento);
-  };
-
-  const limparSelecao = () => {
-    setAgendamentoSelecionado(null);
-  };
-
-  const editarAgendamento = () => {
-    alert(`Editar agendamento: ${agendamentoSelecionado?.id}`);
-  };
-
-  const removerAgendamento = () => {
-    if (window.confirm("Tem certeza que deseja remover este agendamento?")) {
-      alert(`Remover agendamento: ${agendamentoSelecionado?.id}`);
-      limparSelecao();
-    }
-  };
-
+export default function TelaAgendamento() {
   return (
-    <div className="container my-4">
-      <h1 className="text-center text-success mb-4">Agendamentos</h1>
-
-      {agendamentos.length === 0 ? (
-        <p className="text-center">Nenhum agendamento encontrado.</p>
-      ) : (
-        <div className="table-responsive">
-          <table className="table table-striped table-bordered table-hover align-middle">
-            <thead className="table-success">
-              <tr>
-                <th>Escola / Instituto</th>
-                <th>Município</th>
-                <th>Data</th>
-                <th>Primeira Atividade</th>
-                <th>Segunda Atividade</th>
-                <th>Telefone</th>
-                <th>Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              {agendamentos.map((a) => (
-                <tr
-                  key={a.id}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => selecionarAgendamento(a)}
-                  className={
-                    agendamentoSelecionado?.id === a.id ? "table-info" : ""
-                  }
-                >
-                  <td>{a.nome_escola_instituto}</td>
-                  <td>{a.municipio}</td>
-                  <td>{a.data_agendamento}</td>
-                  <td>{a.primeira_atividade}</td>
-                  <td>{a.segunda_atividade}</td>
-                  <td>{a.telefone}</td>
-                  <td>{a.email}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {agendamentoSelecionado && (
-        <div className="card mt-4 shadow-sm">
-          <div className="card-header bg-success text-white d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">Detalhes do Agendamento</h5>
-            <button
-              className="btn btn-sm btn-light"
-              onClick={limparSelecao}
-              title="Fechar"
-            >
-              &times;
-            </button>
-          </div>
-          <div className="card-body">
-            <p>
-              <strong>Escola / Instituto:</strong>{" "}
-              {agendamentoSelecionado.nome_escola_instituto}
-            </p>
-            <p>
-              <strong>Município:</strong> {agendamentoSelecionado.municipio}
-            </p>
-            <p>
-              <strong>Data do agendamento:</strong>{" "}
-              {agendamentoSelecionado.data_agendamento}
-            </p>
-            <p>
-              <strong>Primeira atividade:</strong>{" "}
-              {agendamentoSelecionado.primeira_atividade}
-            </p>
-            <p>
-              <strong>Segunda atividade:</strong>{" "}
-              {agendamentoSelecionado.segunda_atividade}
-            </p>
-            <p>
-              <strong>Telefone:</strong> {agendamentoSelecionado.telefone}
-            </p>
-            <p>
-              <strong>Email:</strong> {agendamentoSelecionado.email}
-            </p>
-            <p>
-              <strong>Responsável:</strong>{" "}
-              {agendamentoSelecionado.nome_responsavel}
-            </p>
-            <p>
-              <strong>Tipo de instituição:</strong>{" "}
-              {agendamentoSelecionado.tipo_institituicao}
-            </p>
-            <p>
-              <strong>Nível da instituição:</strong>{" "}
-              {agendamentoSelecionado.nivel_instituicao}
-            </p>
-            <p>
-              <strong>Necessita adaptação:</strong>{" "}
-              {agendamentoSelecionado.necessaria_adaptacao ? "Sim" : "Não"}
-            </p>
-            {agendamentoSelecionado.necessaria_adaptacao && (
-              <p>
-                <strong>Descrição da adaptação:</strong>{" "}
-                {agendamentoSelecionado.adaptacao_descricao}
-              </p>
-            )}
-            <p>
-              <strong>Alia conteúdo escolar:</strong>{" "}
-              {agendamentoSelecionado.aliar_conteudo_escolar ? "Sim" : "Não"}
-            </p>
-            {agendamentoSelecionado.aliar_conteudo_escolar && (
-              <p>
-                <strong>Conteúdo escolar:</strong>{" "}
-                {agendamentoSelecionado.conteudo_escolar}
-              </p>
-            )}
-            <p>
-              <strong>Piquenique:</strong>{" "}
-              {agendamentoSelecionado.piquenique ? "Sim" : "Não"}
-            </p>
-          </div>
-          <div className="card-footer d-flex gap-2 justify-content-end">
-            <button className="btn btn-warning" onClick={editarAgendamento}>
-              Editar
-            </button>
-            <button className="btn btn-danger" onClick={removerAgendamento}>
-              Remover
-            </button>
-          </div>
-        </div>
-      )}
+    <div>
+      <GenericCrud<Agendamento>
+        entityName="Agendamento"
+        apiUrl="http://localhost:8000/api/agendamentos"
+        schema={agendamentoSchema}
+      />
     </div>
   );
-};
-
-export default AgendamentoTab;
+}
