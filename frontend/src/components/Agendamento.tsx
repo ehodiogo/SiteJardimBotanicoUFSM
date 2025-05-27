@@ -1,4 +1,4 @@
-import backgroundImage from "../../public/backgroundAgendamento.jpg";
+import backgroundImage from "/backgroundAgendamento.jpg";
 import { Link } from "react-router-dom";
 
 const Agendamento = () => {
