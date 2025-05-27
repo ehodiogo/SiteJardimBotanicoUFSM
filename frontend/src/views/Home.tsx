@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import Footer from "../components/Footer";
+import Agendamento from "../components/Agendamento";
 
 const Home: React.FC = () => {
   useEffect(() => {
@@ -16,20 +17,15 @@ const Home: React.FC = () => {
           localStorage.removeItem("amostrasAnalisadas");
         }
       } catch {
-        localStorage.removeItem("amostrasAnalisadas");  
+        localStorage.removeItem("amostrasAnalisadas");
       }
     }
   }, []);
 
   return (
-    <div className="container py-5">
-      <h1>Home</h1>
-      <Link to="/trilhas" className="btn btn-primary">
-        Ver trilhas
-      </Link>
-      <Link to="/listagem" className="btn btn-primary">
-        Ver dados
-      </Link>
+    <div className="">
+      <Agendamento />
+      <Footer />
     </div>
   );
 };
