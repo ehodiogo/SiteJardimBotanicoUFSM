@@ -11,6 +11,11 @@ import { falarTexto } from "../functions/Fala";
 import calcularDistancia from "../functions/Distancia";
 import { useMap } from "react-leaflet";
 
+// if usuario not in point or near
+//      falarTexto(ponto.guia.proximo_passo)
+// proximo passo ele pega que o usuário está no ponto INICIAL da trilha ou um ponto esperado e diz a quantia de passos necessários para chegar ao próximo passo, juntamente a direções 
+// a serem seguidas 
+
 const RecenterMap = ({ center }: { center: [number, number] }) => {
   const map = useMap();
   useEffect(() => {

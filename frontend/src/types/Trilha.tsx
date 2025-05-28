@@ -1,5 +1,6 @@
 export type Guia = {
   descricao: string;
+  proximo_passo: string;
 }
 
 export type Ponto = {
