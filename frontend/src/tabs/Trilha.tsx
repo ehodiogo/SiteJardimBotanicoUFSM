@@ -1,5 +1,5 @@
 import GenericCrud from "../components/GenericCrud";
-import { SchemaField } from "../functions/SchemaField";
+import SchemaField from "../functions/SchemaField";
 import { Trilha } from "../types/Trilha";
 
 const trilhaSchema: readonly SchemaField<Trilha>[] = [
@@ -15,7 +15,7 @@ export default function TelaAmostra() {
     <div>
       <GenericCrud<Trilha>
         entityName="Trilhas"
-        apiUrl="http://localhost:8000/api/trilhas"
+        apiUrl="http://127.0.0.1:8000/api/trilhas/"
         schema={trilhaSchema}
       />
     </div>

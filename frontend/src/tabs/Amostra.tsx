@@ -1,5 +1,5 @@
 import GenericCrud from "../components/GenericCrud";
-import { SchemaField } from "../functions/SchemaField";
+import SchemaField from "../functions/SchemaField";
 import Amostra from "../types/Amostra";
 
 const amostraSchema: readonly SchemaField<Amostra>[] = [
@@ -13,7 +13,17 @@ const amostraSchema: readonly SchemaField<Amostra>[] = [
   { name: "data_registro", label: "Data de Registro", type: "string" },
   { name: "imagem", label: "Imagem", type: "string" },
   { name: "imagem_url", label: "URL da Imagem", type: "string" },
-  { name: "dados_cientificos", label: "Dados Científicos", type: "string" },
+  { name: "dados_cientificos", label: "Dados Científicos", type: "object",
+    displayFields: [
+        { key: "reino", label: "Reino" },
+        { key: "filo", label: "Filo" },
+        { key: "classe", label: "Classe" },
+        { key: "ordem", label: "Ordem" },
+        { key: "familia", label: "Familia" },
+        { key: "genero", label: "Genero" },
+        { key: "especie", label: "Especie" },
+    ]
+   },
 ];
 
 export default function TelaAmostra() {
@@ -21,11 +31,11 @@ export default function TelaAmostra() {
     <div>
       <GenericCrud<Amostra>
         entityName="Amostra"
-        apiUrl="http://localhost:8000/api/amostras"
+        apiUrl="http://127.0.0.1:8000/api/amostras/"
         schema={amostraSchema}
         displayField={(item) =>
           `${item.nome_popular} - ${item.nome_cientifico}`
-        } 
+        }
       />
     </div>
   );

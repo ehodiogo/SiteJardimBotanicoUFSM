@@ -1,6 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, useCallback } from "react";
-import { SchemaField } from "../functions/SchemaField";
-import ExpandableText from "./ExpandableText";
+import SchemaField from "../functions/SchemaField";
+
+const ExpandableText: React.FC<{ text: string }> = ({ text }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const maxLength = 50;
+
+  if (text.length <= maxLength) {
+    return <span>{text}</span>;
+  }
+
+  return (
+    <span>
+      {isExpanded ? text : `${text.substring(0, maxLength)}...`}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="btn btn-link btn-sm p-0 ml-1" 
+      >
+        {isExpanded ? "Menos" : "Mais"}
+      </button>
+    </span>
+  );
+};
 
 type TabType = "listar" | "criar" | "editar" | "remover";
 
@@ -8,7 +29,7 @@ interface GenericCrudProps<T extends { id: number }> {
   entityName: string;
   apiUrl: string;
   schema: readonly SchemaField<T>[];
-  displayField?: keyof T | ((item: T) => string); // aceita chave ou função
+  displayField?: keyof T | ((item: T) => string); 
 }
 
 const GenericCrud = <T extends { id: number }>({
@@ -22,9 +43,14 @@ const GenericCrud = <T extends { id: number }>({
   const [form, setForm] = useState<Partial<T>>({});
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
 
-  // Estado para linha clicada na listagem
   const [selectedRow, setSelectedRow] = useState<T | null>(null);
+
+  const showMessage = (type: string, text: string) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage(null), 3000); 
+  };
 
   const fetchDados = useCallback(async () => {
     setLoading(true);
@@ -33,8 +59,8 @@ const GenericCrud = <T extends { id: number }>({
       if (!res.ok) throw new Error("Erro ao buscar dados");
       const json = (await res.json()) as T[];
       setDados(json);
-    } catch (e) {
-      alert("Erro ao carregar dados: " + e);
+    } catch (e: any) {
+      showMessage("danger", "Erro ao carregar dados: " + e.message);
     } finally {
       setLoading(false);
     }
@@ -47,7 +73,9 @@ const GenericCrud = <T extends { id: number }>({
       activeTab === "remover"
     ) {
       fetchDados();
-      setSelectedRow(null); // Limpa seleção ao trocar aba
+      setSelectedRow(null); 
+      setForm({}); 
+      setSelectedId(null); 
     }
   }, [activeTab, fetchDados]);
 
@@ -60,34 +88,42 @@ const GenericCrud = <T extends { id: number }>({
     }
   }, [selectedId, dados]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    if (!schema.some((f) => f.name === name)) return;
+    const field = schema.find((f) => f.name === name);
 
-    const fieldType = schema.find((f) => f.name === name)?.type;
+    if (!field) return;
+
+    let parsedValue: any = value;
+    if (field.type === "number") {
+      parsedValue = Number(value);
+    } else if (field.type === "object") {
+      try {
+        parsedValue = JSON.parse(value);
+      } catch (error) {
+        console.error("Entrada JSON inválida:", error);
+        parsedValue = value; 
+      }
+    }
 
     setForm((prev) => ({
       ...prev,
-      [name]: fieldType === "number" ? Number(value) : value,
+      [name]: parsedValue,
     }));
   };
 
-  // Função para renderizar o texto no select
   const renderDisplayField = (item: T) => {
     if (!displayField) {
-      // Se não passou nada, usa o primeiro campo do schema
-      return String(item[schema[0].name]);
+      const firstField = schema[0]?.name;
+      return firstField ? String(item[firstField]) : `Item ${item.id}`;
     }
     if (typeof displayField === "function") {
       return displayField(item);
     }
-    // se for string (keyof T)
     return String(item[displayField]);
   };
 
-  // Função para clicar na linha da tabela
   const handleRowClick = (item: T) => {
-    // Se clicar na mesma linha desmarca, senão marca novo item
     if (selectedRow?.id === item.id) {
       setSelectedRow(null);
     } else {
@@ -95,7 +131,90 @@ const GenericCrud = <T extends { id: number }>({
     }
   };
 
-  console.log("Items: ", dados);
+  const renderFieldValue = (value: any, fieldSchema?: SchemaField<T>) => {
+    if (typeof value === 'object' && value !== null) {
+      if (fieldSchema && fieldSchema.type === "object" && fieldSchema.displayFields && fieldSchema.displayFields.length > 0) {
+        const displayedParts = fieldSchema.displayFields.map(part => {
+          const fieldValue = value[part.key as keyof typeof value];
+          return `${part.label}: ${typeof fieldValue === 'object' && fieldValue !== null ? JSON.stringify(fieldValue) : String(fieldValue)}`;
+        });
+        return displayedParts.join(' | '); 
+      }
+      return JSON.stringify(value, null, 2); 
+    }
+    return String(value);
+  };
+
+  async function handleCreate() {
+    try {
+      setLoading(true);
+      const res = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Erro ao criar");
+      }
+      setForm({});
+      fetchDados();
+      setActiveTab("listar");
+      showMessage("success", `${entityName} criado com sucesso!`);
+    } catch (error: any) {
+      showMessage("danger", "Erro ao criar: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleEdit() {
+    if (!selectedId) return;
+    try {
+      setLoading(true);
+      const res = await fetch(`${apiUrl}/${selectedId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Erro ao atualizar");
+      }
+      setSelectedId(null);
+      setForm({});
+      fetchDados();
+      setActiveTab("listar");
+      showMessage("success", `${entityName} atualizado com sucesso!`);
+    } catch (error: any) {
+      showMessage("danger", "Erro ao atualizar: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!selectedId) return;
+    console.log(`Confirmando exclusão de ${entityName} com ID: ${selectedId}`);
+    try {
+      setLoading(true);
+      const res = await fetch(`${apiUrl}/${selectedId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Erro ao remover");
+      }
+      setSelectedId(null);
+      fetchDados();
+      setActiveTab("listar");
+      showMessage("success", `${entityName} removido com sucesso!`);
+    } catch (error: any) {
+      showMessage("danger", "Erro ao remover: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="container py-4">
@@ -124,6 +243,12 @@ const GenericCrud = <T extends { id: number }>({
         })}
       </div>
 
+      {message && (
+        <div className={`alert alert-${message.type} text-center`} role="alert">
+          {message.text}
+        </div>
+      )}
+
       <div className="card p-4">
         {loading ? (
           <div className="text-center">Carregando...</div>
@@ -142,42 +267,50 @@ const GenericCrud = <T extends { id: number }>({
                   </tr>
                 </thead>
                 <tbody>
-                  {dados.map((item) => (
-                    <tr
-                      key={item.id}
-                      onClick={() => handleRowClick(item)}
-                      style={{
-                        cursor: "pointer",
-                        backgroundColor:
-                          selectedRow?.id === item.id ? "#e9ecef" : undefined,
-                      }}
-                    >
-                      {schema
-                        .filter(({ name }) => name !== "id")
-                        .map(({ name }) => (
-                          <td key={name.toString()}>
-                            <ExpandableText text={String(item[name])} />
-                          </td>
-                        ))}
+                  {dados.length === 0 ? (
+                    <tr>
+                      <td colSpan={schema.length - 1} className="text-center">
+                        Nenhum {entityName} encontrado.
+                      </td>
                     </tr>
-                  ))}
+                  ) : (
+                    dados.map((item) => (
+                      <tr
+                        key={item.id}
+                        onClick={() => handleRowClick(item)}
+                        style={{
+                          cursor: "pointer",
+                          backgroundColor:
+                            selectedRow?.id === item.id ? "#e9ecef" : undefined,
+                        }}
+                      >
+                        {schema
+                          .filter(({ name }) => name !== "id")
+                          .map((field) => (
+                            <td key={field.name.toString()}>
+                              <ExpandableText text={renderFieldValue(item[field.name], field)} />
+                            </td>
+                          ))}
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
 
             {selectedRow && (
               <div className="card mt-4 p-3 border-primary">
-                <h5 className="mb-3">Detalhes </h5>
-                {schema.map(({ name, label }) => (
-                  <div key={label} className="mb-2">
-                    <strong>{label}:</strong> {String(selectedRow[name])}
+                <h5 className="mb-3">Detalhes de {renderDisplayField(selectedRow)}</h5>
+                {schema.map((field) => (
+                  <div key={field.label} className="mb-2">
+                    <strong>{field.label}:</strong> {renderFieldValue(selectedRow[field.name], field)}
                   </div>
                 ))}
                 <button
                   className="btn btn-outline-secondary btn-sm mt-2"
                   onClick={() => setSelectedRow(null)}
                 >
-                  Fechar
+                  Fechar Detalhes
                 </button>
               </div>
             )}
@@ -193,18 +326,33 @@ const GenericCrud = <T extends { id: number }>({
                     key={name.toString()}
                     className={`col-md-${type === "number" ? 3 : 4}`}
                   >
-                    <input
-                      name={name.toString()}
-                      placeholder={label}
-                      type={type === "number" ? "number" : "text"}
-                      className="form-control"
-                      value={
-                        form[name] !== undefined && form[name] !== null
-                          ? String(form[name])
-                          : ""
-                      }
-                      onChange={handleChange}
-                    />
+                    {type === "object" ? (
+                      <textarea
+                        name={name.toString()}
+                        placeholder={label}
+                        className="form-control"
+                        rows={4} 
+                        value={
+                          form[name] !== undefined && form[name] !== null
+                            ? typeof form[name] === 'object' ? JSON.stringify(form[name], null, 2) : String(form[name])
+                            : ""
+                        }
+                        onChange={handleChange}
+                      />
+                    ) : (
+                      <input
+                        name={name.toString()}
+                        placeholder={label}
+                        type={type === "number" ? "number" : "text"}
+                        className="form-control"
+                        value={
+                          form[name] !== undefined && form[name] !== null
+                            ? String(form[name])
+                            : ""
+                        }
+                        onChange={handleChange}
+                      />
+                    )}
                   </div>
                 ))}
               <div className="col-md-2 text-center">
@@ -226,7 +374,7 @@ const GenericCrud = <T extends { id: number }>({
                 onChange={(e) => setSelectedId(Number(e.target.value) || null)}
                 value={selectedId ?? ""}
               >
-                <option value="">Selecione</option>
+                <option value="">Selecione um item para editar</option>
                 {dados.map((d) => (
                   <option key={d.id} value={d.id}>
                     {renderDisplayField(d)}
@@ -243,18 +391,33 @@ const GenericCrud = <T extends { id: number }>({
                       key={name.toString()}
                       className={`col-md-${type === "number" ? 3 : 4}`}
                     >
-                      <input
-                        name={name.toString()}
-                        placeholder={label}
-                        type={type === "number" ? "number" : "text"}
-                        className="form-control"
-                        value={
-                          form[name] !== undefined && form[name] !== null
-                            ? String(form[name])
-                            : ""
-                        }
-                        onChange={handleChange}
-                      />
+                      {type === "object" ? (
+                        <textarea
+                          name={name.toString()}
+                          placeholder={label}
+                          className="form-control"
+                          rows={4}
+                          value={
+                            form[name] !== undefined && form[name] !== null
+                              ? typeof form[name] === 'object' ? JSON.stringify(form[name], null, 2) : String(form[name])
+                              : ""
+                          }
+                          onChange={handleChange}
+                        />
+                      ) : (
+                        <input
+                          name={name.toString()}
+                          placeholder={label}
+                          type={type === "number" ? "number" : "text"}
+                          className="form-control"
+                          value={
+                            form[name] !== undefined && form[name] !== null
+                              ? String(form[name])
+                              : ""
+                          }
+                          onChange={handleChange}
+                        />
+                      )}
                     </div>
                   ))}
                 <div className="col-md-2 text-center">
@@ -277,7 +440,7 @@ const GenericCrud = <T extends { id: number }>({
                 onChange={(e) => setSelectedId(Number(e.target.value) || null)}
                 value={selectedId ?? ""}
               >
-                <option value="">Selecione</option>
+                <option value="">Selecione um item para remover</option>
                 {dados.map((d) => (
                   <option key={d.id} value={d.id}>
                     {renderDisplayField(d)}
@@ -297,58 +460,6 @@ const GenericCrud = <T extends { id: number }>({
       </div>
     </div>
   );
-
-  // Funções para criar, editar e remover (você já deve ter implementado)
-  async function handleCreate() {
-    try {
-      const res = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error("Erro ao criar");
-      setForm({});
-      fetchDados();
-      setActiveTab("listar");
-    } catch (error) {
-      alert(error);
-    }
-  }
-
-  async function handleEdit() {
-    if (!selectedId) return;
-    try {
-      const res = await fetch(`${apiUrl}/${selectedId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (!res.ok) throw new Error("Erro ao atualizar");
-      setSelectedId(null);
-      setForm({});
-      fetchDados();
-      setActiveTab("listar");
-    } catch (error) {
-      alert(error);
-    }
-  }
-
-  async function handleDelete() {
-    if (!selectedId) return;
-    if (!window.confirm(`Confirma remover o ${entityName} selecionado?`))
-      return;
-    try {
-      const res = await fetch(`${apiUrl}/${selectedId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Erro ao remover");
-      setSelectedId(null);
-      fetchDados();
-      setActiveTab("listar");
-    } catch (error) {
-      alert(error);
-    }
-  }
 };
 
 export default GenericCrud;

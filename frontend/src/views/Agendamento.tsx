@@ -56,7 +56,7 @@ const AgendamentoForm = () => {
     e.preventDefault();
     console.log("Enviar dados:", formData);
 
-    fetch("http://localhost:8000/api/agendamentos/", {
+    fetch("http://127.0.0.1:8000/api/agendamentos/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

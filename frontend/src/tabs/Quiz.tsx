@@ -16,7 +16,7 @@ export default function TelaAmostra() {
     <div>
       <GenericCrud<QuizAmostra>
         entityName="Quizes"
-        apiUrl="http://localhost:8000/api/quiz"
+        apiUrl="http://127.0.0.1:8000/api/quiz/"
         schema={quizSchema}
       />
     </div>
