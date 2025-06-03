@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Footer from "../components/Footer";
 import Agendamento from "../components/Agendamento";
+import MascotChat from "../components/mascotChat";
 
 const Home: React.FC = () => {
   useEffect(() => {
@@ -24,6 +25,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="">
+      <MascotChat />
       <Agendamento />
       <Footer />
     </div>
