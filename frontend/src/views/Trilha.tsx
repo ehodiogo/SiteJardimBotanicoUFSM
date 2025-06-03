@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import "../css/TrilhaPage.css";
 import { useState, useEffect, useMemo } from "react";
-import { Trilha } from "../types/Trilha";
+import { Ponto, Trilha } from "../types/Trilha";
 import { getAllData } from "../services/Api";
 import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import L from "leaflet";
@@ -52,6 +52,7 @@ const TrilhaPage = () => {
       }
     } else {
       setUserLocation([-29.716895283302495, -53.729593828291925]);
+      // setUserLocation([-29.716781667616758, -53.729607756572]);
     }
   }, [id, usarPosicaoReal]);
 
@@ -73,14 +74,37 @@ const TrilhaPage = () => {
       ponto.longitude
     );
 
+    console.log("Distancia:", distancia);
+
     if (distancia <= 3 && !visitados.includes(ponto.order)) {
       falarTexto(ponto.descricao);
       falarTexto(ponto.guia.descricao);
       setVisitados((prev) => [...prev, ponto.order]);
       setMostrarPontoAtual(true);
     }
+
+    const msg = mostrarProximoPasso(ponto, distancia);
+    if (msg) {
+      falarTexto(msg);
+    }
   }, [userLocation, pontoAtual, visitados, trilha, pontosOrdenados]);
 
+  function mostrarProximoPasso(ponto: Ponto, distancia: number): string | null {
+    console.log("Distancia:", distancia);
+    console.log("Guia:", ponto.guia);
+    console.log("Proximo Passo:", ponto.guia?.proximo_passo);
+    console.log("Tipo:", typeof ponto.guia?.proximo_passo);
+    if (
+      distancia > 3 &&
+      distancia <= 15 &&
+      ponto.guia &&
+      typeof ponto.guia.proximo_passo === "string"
+    ) {
+      return ponto.guia.proximo_passo;
+    }
+    return null;
+  }
+  
   const irParaProximoPonto = () => {
     setPontoAtual((prev) => prev + 1);
     setMostrarPontoAtual(false);

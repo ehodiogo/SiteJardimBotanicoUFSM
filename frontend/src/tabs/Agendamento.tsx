@@ -1,6 +1,6 @@
 import GenericCrud from "../components/GenericCrud";
-import { SchemaField } from "../functions/SchemaField";
-import { Agendamento } from "../types/Agendamento";
+import SchemaField from "../functions/SchemaField";
+ import { Agendamento } from "../types/Agendamento";
 
 const agendamentoSchema: readonly SchemaField<Agendamento>[] = [
   { name: "id", label: "ID", type: "number" },
@@ -31,8 +31,11 @@ export default function TelaAgendamento() {
     <div>
       <GenericCrud<Agendamento>
         entityName="Agendamento"
-        apiUrl="http://localhost:8000/api/agendamentos"
+        apiUrl="http://127.0.0.1:8000/api/agendamentos/"
         schema={agendamentoSchema}
+        displayField={(item) =>
+          `${item.nome_responsavel} - ${item.data_agendamento}`
+        }
       />
     </div>
   );

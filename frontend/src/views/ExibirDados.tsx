@@ -14,7 +14,6 @@ const ExibirDados: React.FC = () => {
 
   return (
     <div style={{ padding: '40px' }}>
-      <h1>Dados do Backend</h1>
       <ul>
         {dados.map((item) => (
             console.log(item),

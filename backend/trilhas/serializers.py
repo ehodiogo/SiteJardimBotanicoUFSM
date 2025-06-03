@@ -6,7 +6,7 @@ from .models import Trilha, Ponto, GuiaTrilha
 class GuiaTrilhaSerializer(serializers.ModelSerializer):
     class Meta:
         model = GuiaTrilha
-        fields = ["descricao"]
+        fields = ["descricao", "proximo_passo"]
 
 
 class PontoSerializer(serializers.ModelSerializer):

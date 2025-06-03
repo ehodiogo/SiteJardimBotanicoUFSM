@@ -1,14 +1,4 @@
-type DadosCientificos = {
-    id: number;
-    nome_cientifico: string;
-    reino: string;
-    filo: string;
-    classe: string;
-    ordem: string;
-    familia: string;
-    genero: string;
-    especie: string;
-}
+import DadosCientificos from "./DadosCientificos";
 
 type Amostra = {
     id: number;
@@ -21,7 +11,7 @@ type Amostra = {
     data_registro: string;
     imagem: string;
     imagem_url: string;
-    dados_cientificos?: DadosCientificos;
+    dados_cientificos: DadosCientificos;
 }
 
 export default Amostra;

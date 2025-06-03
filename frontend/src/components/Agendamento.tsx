@@ -1,4 +1,5 @@
-import backgroundImage from "../../public/backgroundAgendamento.jpg";
+import backgroundImage from "/backgroundAgendamento.jpg";
+import { Link } from "react-router-dom";
 
 const Agendamento = () => {
   return (
@@ -39,10 +40,8 @@ const Agendamento = () => {
           Descubra a beleza e a diversidade do nosso Jardim Botânico. Um espaço
           de aprendizado, lazer e conexão com a natureza.
         </p>
-        <a
-          href="https://forms.gle/9GoPeqG27csYxWJ86"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          to="/agendamento"
           className="btn btn-success mt-4"
           style={{
             borderRadius: "50px",
@@ -50,10 +49,13 @@ const Agendamento = () => {
             fontSize: "1.1rem",
             fontWeight: "bold",
             backgroundColor: "#5a8f29",
+            color: "white",
+            textDecoration: "none",
+            display: "inline-block",
           }}
         >
           Agende sua visita
-        </a>
+        </Link>
       </div>
     </section>
   );

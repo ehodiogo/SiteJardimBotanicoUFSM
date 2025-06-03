@@ -1,5 +1,5 @@
 import GenericCrud from "../components/GenericCrud";
-import { SchemaField } from "../functions/SchemaField";
+import SchemaField from "../functions/SchemaField";
 import { Bolsista } from "../types/Bolsista";
 
 const bolsistaSchema: readonly SchemaField<Bolsista>[] = [
@@ -16,8 +16,11 @@ export default function TelaAmostra() {
     <div>
       <GenericCrud<Bolsista>
         entityName="Bolsista"
-        apiUrl="http://localhost:8000/api/bolsistas"
+        apiUrl="http://127.0.0.1:8000/api/bolsistas/"
         schema={bolsistaSchema}
+        displayField={(item) =>
+          `${item.nome} - ${item.matricula} - ${item.curso}`
+        }
       />
     </div>
   );
