@@ -23,6 +23,7 @@ const RecenterMap = ({ center }: { center: [number, number] }) => {
 
 const TrilhaPage = () => {
   const [usarPosicaoReal, setUsarPosicaoReal] = useState(true);
+  const [usarPosicaoProxima, setUsarPosicaoProxima] = useState(false);
   const [trilha, setTrilha] = useState<Trilha>();
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null
@@ -51,10 +52,13 @@ const TrilhaPage = () => {
         );
       }
     } else {
-      setUserLocation([-29.716895283302495, -53.729593828291925]);
-      // setUserLocation([-29.716781667616758, -53.729607756572]);
+      if (usarPosicaoProxima) {
+        setUserLocation([-29.716781667616758, -53.729607756572]);
+      } else {
+        setUserLocation([-29.716895283302495, -53.729593828291925]);
+      }
     }
-  }, [id, usarPosicaoReal]);
+  }, [id, usarPosicaoReal, usarPosicaoProxima]);
 
   const pontosOrdenados = useMemo(() => {
     if (!trilha?.pontos) return [];
@@ -104,7 +108,7 @@ const TrilhaPage = () => {
     }
     return null;
   }
-  
+
   const irParaProximoPonto = () => {
     setPontoAtual((prev) => prev + 1);
     setMostrarPontoAtual(false);
@@ -332,6 +336,19 @@ const TrilhaPage = () => {
               Você está no ponto <strong>{pontoAtual}</strong>:{" "}
               {ponto.descricao}
             </p>
+            {ponto.imagem && (
+              <div className="d-flex justify-content-center mb-3">
+                <img
+                  src={ponto.imagem}
+                  alt={`Imagem do ponto ${ponto.order}`}
+                  className="img-fluid rounded" 
+                  style={{
+                    maxWidth: "300px",
+                    height: "auto",
+                  }}
+                />
+              </div>
+            )}
             <button
               className="btn btn-outline-success"
               onClick={irParaProximoPonto}
@@ -355,24 +372,42 @@ const TrilhaPage = () => {
             className={`btn btn-sm ${
               usarPosicaoReal ? "btn-success" : "btn-outline-success"
             }`}
-            onClick={() => setUsarPosicaoReal(true)}
+            onClick={() => {
+              setUsarPosicaoReal(true);
+              setUsarPosicaoProxima(false);
+            }}
           >
             Usar GPS real
           </button>
           <button
             className={`btn btn-sm ${
-              !usarPosicaoReal ? "btn-success" : "btn-outline-success"
+              !usarPosicaoReal && !usarPosicaoProxima
+                ? "btn-success"
+                : "btn-outline-success"
             }`}
-            onClick={() => setUsarPosicaoReal(false)}
+            onClick={() => {
+              setUsarPosicaoReal(false);
+              setUsarPosicaoProxima(false);
+            }}
           >
             Usar posição fixa
+          </button>
+          <button
+            className={`btn btn-sm ${
+              usarPosicaoProxima ? "btn-success" : "btn-outline-success"
+            }`}
+            onClick={() => {
+              setUsarPosicaoProxima(true);
+              setUsarPosicaoReal(false);
+            }}
+          >
+            Usar posição próxima
           </button>
         </div>
       </div>
     </section>
   );
 };
-
 
 const tileLayerUrls: Record<string, { url: string; attribution: string }> = {
   standard: {
