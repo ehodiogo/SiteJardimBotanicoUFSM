@@ -1,0 +1,160 @@
+/* Fontes importadas no CSS principal ou aqui, se preferir */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap");
+
+/* Keyframes para animação de entrada (melhorada) */
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.trail-card {
+  background: linear-gradient(
+    135deg,
+    #d6ffd6,
+    #cdffcd
+  ); /* Gradiente suave para o card */
+  border-radius: 20px; /* Bordas mais arredondadas */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); /* Sombra mais profunda */
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Transição mais suave e complexa */
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: none; /* Remover a borda */
+  position: relative; /* Para possíveis pseudo-elementos ou ícones flutuantes */
+
+  /* Animação de entrada */
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInSlideUp 0.7s ease-out forwards; /* Animação mais longa e suave */
+  animation-fill-mode: forwards;
+}
+
+.trail-card:hover {
+  transform: translateY(-12px) scale(1.02); /* Elevação e leve aumento de escala */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); /* Sombra ainda mais intensa no hover */
+}
+
+.trail-card-body {
+  padding: 30px; /* Mais padding */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  text-align: center; /* Centralizar texto no card */
+}
+
+.trail-card-title {
+  font-family: "Montserrat", sans-serif; /* Nova fonte para o título do card */
+  color: #1a5c20; /* Verde mais escuro */
+  font-weight: 550; /* Forte */
+  font-size: 1.5em; /* Aumentado */
+  margin-bottom: 25px; /* Espaçamento maior */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centralizar ícone e texto */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05); /* Sombra sutil no título do card */
+}
+
+.trail-card-icon {
+  margin-right: 12px;
+  font-size: 1.3em; /* Ícone um pouco maior */
+  color: #4caf50; /* Verde vibrante */
+}
+
+.trail-details {
+  margin-bottom: 30px; /* Espaçamento maior */
+  flex-grow: 1;
+}
+
+.trail-detail-item {
+  font-family: "Poppins", sans-serif; /* Nova fonte para detalhes */
+  font-size: 1em;
+  color: #444; /* Cor de texto mais escura para legibilidade */
+  margin-bottom: 10px; /* Espaçamento entre os detalhes */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centralizar detalhes */
+  line-height: 1.4;
+}
+
+.detail-icon {
+  margin-right: 10px;
+  color: #66bb6a;
+  font-size: 1.1em; /* Ícone um pouco maior */
+}
+
+.detail-label {
+  font-weight: 600; /* Mais peso para os rótulos */
+  color: #222; /* Cor mais escura para os rótulos */
+  margin-right: 5px;
+}
+
+.trail-details-button {
+  background: linear-gradient(45deg, #4caf50, #8bc34a); /* Gradiente no botão */
+  color: #ffffff;
+  border: none;
+  border-radius: 30px; /* Mais arredondado */
+  padding: 15px 30px; /* Mais padding */
+  font-size: 1.1em; /* Aumentado */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px; /* Mais espaçamento */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Transição para todas as propriedades */
+  width: 90%; /* Ligeiramente menor que 100% para um respiro */
+  max-width: 250px; /* Limite de largura para o botão */
+  margin: auto; /* Centraliza o botão */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra no botão */
+}
+
+.trail-details-button:hover {
+  background: linear-gradient(
+    45deg,
+    #66bb6a,
+    #9ccc65
+  ); /* Gradiente mais claro no hover */
+  transform: translateY(-3px) scale(1.03); /* Elevação e aumento */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Media Queries para responsividade do card */
+@media (max-width: 768px) {
+  .trail-card-body {
+    padding: 25px;
+  }
+  .trail-card-title {
+    font-size: 1.6em;
+  }
+  .trail-details-button {
+    padding: 12px 25px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .trail-card {
+    border-radius: 15px;
+  }
+  .trail-card-body {
+    padding: 20px;
+  }
+  .trail-card-title {
+    font-size: 1.4em;
+    margin-bottom: 20px;
+  }
+  .trail-details {
+    margin-bottom: 25px;
+  }
+  .trail-details-button {
+    width: 100%;
+    max-width: none;
+  }
+}

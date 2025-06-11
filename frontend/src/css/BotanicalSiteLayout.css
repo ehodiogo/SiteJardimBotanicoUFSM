@@ -1,0 +1,251 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Merriweather:wght@300;400&display=swap");
+
+.botanical-site-background {
+  background-color: #f7f9f4; /* Cor de fundo suave */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-family: "Merriweather", serif; /* Fonte para o corpo do texto */
+}
+
+.botanical-content-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr; /* Coluna de texto um pouco maior */
+  gap: 80px; /* Aumentado o espaçamento entre as colunas */
+  max-width: 1300px; /* Aumentado a largura máxima */
+  width: 100%;
+  align-items: center;
+}
+
+.welcome-text-column {
+  text-align: left; /* Alinhar texto à esquerda */
+}
+
+.welcome-title-part1 {
+  font-family: "Merriweather", serif;
+  font-size: 1.8em; /* Tamanho ajustado */
+  color: #774936;
+  font-weight: 400; /* Peso da fonte mais leve */
+  margin-bottom: -5px; /* Ajuste para aproximar do título principal */
+  letter-spacing: 1px; /* Adicionado espaçamento entre letras */
+}
+
+.welcome-title-part2 {
+  font-family: "Playfair Display", serif; /* Fonte de destaque para o título principal */
+  font-size: 4.5em; /* Aumentado o tamanho */
+  color: #3a5a40;
+  font-weight: 700; /* Peso da fonte mais forte */
+  margin-top: 0;
+  margin-bottom: 25px; /* Espaçamento maior */
+  line-height: 1.1; /* Ajuste de altura da linha */
+}
+
+.welcome-description {
+  font-size: 1.15em; /* Tamanho ligeiramente maior */
+  color: #5c5c5c;
+  line-height: 1.7; /* Melhorado espaçamento de linha */
+  max-width: 480px; /* Aumentado a largura máxima para o parágrafo */
+}
+
+.mascot-area-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Centralizar verticalmente */
+  padding: 20px; /* Adicionado padding */
+}
+
+.mascot-main-panel {
+  background-color: #bff3ba;
+  border-radius: 20px; /* Borda mais suave */
+  padding: 40px 30px; /* Padding ajustado */
+  width: 100%;
+  max-width: 450px; /* Largura máxima um pouco maior */
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.11); /* Sombra mais pronunciada e suave */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Borda sutil */
+}
+
+.mascot-main-panel .mascot-image-actual {
+  max-width: 100%; /* Ajustado o tamanho da imagem */
+  max-height: 320px; /* Ajustado */
+  height: auto;
+  margin-bottom: 25px; /* Espaço maior */
+  filter: drop-shadow(3px 5px 8px rgba(0, 0, 0, 0.1)); /* Sombra na imagem */
+}
+
+.mascot-greeting {
+  font-family: "Playfair Display", serif; /* Fonte de destaque para a saudação */
+  font-size: 1.2em;
+  color: #3a5a40;
+  font-weight: 700;
+  margin: 0;
+  padding: 0 15px; /* Padding para evitar que o texto encoste nas bordas */
+}
+
+.qr-scan-area {
+  margin-top: 40px; /* Aumentado o espaçamento */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 450px; /* Alinhar com o painel do mascote */
+}
+
+.camera-prompt {
+  font-size: 1em;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 20px; /* Espaço antes do botão */
+  text-align: center;
+  padding: 0 15px; /* Padding para o texto */
+}
+
+.qr-scan-button {
+  display: flex;
+  align-items: center;
+  padding: 12px 25px; /* Aumentado padding do botão */
+  border: none; /* Remover borda padrão */
+  border-radius: 30px; /* Borda mais arredondada (pill shape) */
+  background-color: #3a5a40; /* Cor primária do tema */
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Sombra suave no botão */
+  transition: all 0.3s ease; /* Transição suave para hover */
+  font-family: "Merriweather", serif;
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.qr-scan-button:hover {
+  background-color: #5a7a5f; /* Cor mais clara no hover */
+  transform: translateY(-2px); /* Efeito de elevação */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Sombra mais intensa no hover */
+}
+
+.qr-scan-button svg {
+  margin-right: 10px; /* Espaço maior para o ícone */
+  font-size: 1.2em; /* Tamanho ajustado do ícone */
+}
+
+.camera-view-container-themed {
+  margin-top: 30px; /* Espaçamento maior */
+  padding: 10px; /* Padding interno */
+  border: 2px solid #3a5a40; /* Borda com a cor do tema */
+  border-radius: 15px; /* Bordas arredondadas */
+  background-color: #1a1a1a; /* Fundo escuro para a câmera */
+  text-align: center;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0, 0, 0, 0.1); /* Sombra interna e externa */
+  width: 100%;
+  max-width: 450px;
+}
+
+.camera-view-container-themed video {
+  width: 100%;
+  height: auto;
+  border-radius: 10px; /* Bordas arredondadas para o vídeo */
+  display: block;
+  object-fit: cover; /* Garante que o vídeo preencha o container */
+}
+
+/* O botão de fechar câmera foi integrado ao qr-scan-button, então não precisa de um estilo separado aqui */
+
+.error-message-themed {
+  background-color: #fcebeb; /* Cor de fundo mais suave para erro */
+  color: #c0392b; /* Cor de texto de erro mais forte */
+  padding: 12px 20px;
+  border: 1px solid #e74c3c; /* Borda de erro */
+  border-radius: 10px;
+  margin-top: 25px; /* Espaçamento maior */
+  text-align: center;
+  width: 100%;
+  max-width: 450px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra suave */
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 992px) {
+  .botanical-content-grid {
+    grid-template-columns: 1fr; /* Uma coluna em telas menores */
+    gap: 60px;
+    padding: 0 20px; /* Adicionado padding horizontal */
+  }
+
+  .welcome-text-column {
+    text-align: center; /* Centralizar texto em telas menores */
+  }
+
+  .welcome-title-part1 {
+    font-size: 1.5em;
+  }
+
+  .welcome-title-part2 {
+    font-size: 3.5em;
+  }
+
+  .welcome-description {
+    max-width: 600px; /* Aumentar largura em tablets */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .mascot-area-column {
+    padding: 0; /* Remover padding em telas menores */
+  }
+}
+
+@media (max-width: 600px) {
+  .botanical-site-background {
+    padding: 30px 15px;
+  }
+
+  .welcome-title-part1 {
+    font-size: 1.2em;
+  }
+
+  .welcome-title-part2 {
+    font-size: 2.8em;
+  }
+
+  .welcome-description {
+    font-size: 1em;
+  }
+
+  .mascot-main-panel {
+    padding: 30px 20px;
+    min-height: auto;
+  }
+
+  .mascot-main-panel .mascot-image-actual {
+    max-width: 70%;
+    max-height: 200px;
+  }
+
+  .mascot-greeting {
+    font-size: 1.1em;
+  }
+
+  .qr-scan-button {
+    padding: 10px 20px;
+    font-size: 0.9em;
+  }
+
+  .camera-prompt {
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 400px) {
+  .welcome-title-part2 {
+    font-size: 2.2em;
+  }
+}

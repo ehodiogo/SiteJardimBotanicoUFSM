@@ -1,0 +1,380 @@
+/* Importar fontes do Google Fonts - Mantenha a consistência global */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Poppins:wght@300;400;600&family=Lobster&display=swap");
+
+.biodiversity-detail-page-container {
+  min-height: 100vh;
+  /* Fundo mais complexo: gradiente e uma sobreposição de cor ou textura */
+  background: linear-gradient(
+    180deg,
+    #e8f5e9 0%,
+    #c8e6c9 100%
+  ); /* Gradiente suave e refrescante */
+  padding-top: 100px; /* Mais espaço no topo */
+  padding-bottom: 100px; /* Mais espaço na parte inferior */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Poppins", sans-serif; /* Fonte padrão mais moderna */
+  overflow-x: hidden;
+  position: relative;
+  /* Adicionar uma textura sutil ou padrão SVG para o fundo */
+  background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g fill="%23d4edda" fill-opacity="0.4"><path d="M98 0H100V2H98zM98 4H100V6H98zM98 8H100V10H98zM98 12H100V14H98zM98 16H100V18H98zM98 20H100V22H98zM98 24H100V26H98zM98 28H100V30H98zM98 32H100V34H98zM98 36H100V38H98zM98 40H100V42H98zM98 44H100V46H98zM98 48H100V50H98zM98 52H100V54H98zM98 56H100V58H98zM98 60H100V62H98zM98 64H100V66H98zM98 68H100V70H98zM98 72H100V74H98zM98 76H100V78H98zM98 80H100V82H98zM98 84H100V86H98zM98 88H100V90H98zM98 92H100V94H98zM98 96H100V98H98zM0 98H2V100H0zM4 98H6V100H4zM8 98H10V100H8zM12 98H14V100H12zM16 98H18V100H16zM20 98H22V100H20zM24 98H26V100H24zM28 98H30V100H28zM32 98H34V100H32zM36 98H38V100H36zM40 98H42V100H40zM44 98H46V100H44zM48 98H50V100H48zM52 98H54V100H52zM56 98H58V100H56zM60 98H62V100H60zM64 98H66V100H64zM68 98H70V100H68zM72 98H74V100H72zM76 98H78V100H76zM80 98H82V100H80zM84 98H86V100H84zM88 98H90V100H88zM92 98H94V100H92zM96 98H98V100H96z" /></g></svg>');
+  background-repeat: repeat;
+  background-size: 20px 20px; /* Tamanho da repetição do padrão */
+  background-attachment: fixed; /* O fundo não rola com o conteúdo */
+}
+
+.container.content-section {
+  width: 100%;
+  max-width: 1280px;
+  padding: 0 30px;
+  box-sizing: border-box;
+}
+
+/* Título Principal - Consistente */
+.biodiversity-detail-main-title {
+  font-family: "Merriweather", serif; /* Fonte forte para o título */
+  text-align: center;
+  margin-bottom: 80px; /* Mais espaço abaixo do título */
+  color: #1a5220; /* Verde escuro forte */
+  font-weight: 850; /* Extra bold */
+  font-size: 4.5em; /* Grande e impactante */
+  letter-spacing: -1px; /* Letras mais próximas para impacto */
+  line-height: 1; /* Linha mais apertada */
+  text-transform: uppercase; /* Todo em maiúsculas */
+  position: relative; /* Para o subtítulo */
+  padding-bottom: 20px; /* Espaço para o subtítulo */
+}
+
+.biodiversity-detail-main-title .subtitle {
+  font-family: "Lobster", cursive;
+  display: block;
+  font-size: 0.3em;
+  font-weight: 400;
+  color: #4caf50;
+  margin-top: 5px;
+  letter-spacing: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  text-transform: none;
+}
+
+/* Status Messages - Consistente */
+.status-message {
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+  padding: 25px 35px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  margin: 40px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-message::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background-color: #8bc34a;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.loading-message {
+  background-color: #e8f5e9;
+  color: #4caf50;
+  border: 1px solid #a5d6a7;
+}
+.loading-message::before {
+  background-color: #4caf50;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ef9a9a;
+}
+.error-message::before {
+  background-color: #d32f2f;
+}
+
+/* Detail Card Wrapper - O grande card principal */
+.detail-card-wrapper {
+  background: #ffffff;
+  border-radius: 25px; /* Bordas bem arredondadas */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2); /* Sombra mais profunda */
+  padding: 40px; /* Padding interno generoso */
+  display: grid;
+  grid-template-columns: 1fr 1.5fr; /* Imagem: 1 parte, Info: 1.5 partes */
+  gap: 50px; /* Espaçamento entre colunas */
+  align-items: flex-start; /* Alinha o conteúdo ao topo */
+  position: relative;
+  overflow: hidden;
+  animation: fadeInFromTop 0.8s ease-out forwards; /* Animação de entrada */
+}
+
+@keyframes fadeInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.detail-card-wrapper::before {
+  /* Elemento decorativo de folha */
+  content: "🍃"; /* ou uma imagem de folha SVG */
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  font-size: 8em;
+  color: rgba(129, 199, 132, 0.2); /* Verde transparente */
+  transform: rotate(-30deg);
+  z-index: 1; /* Garante que fique atrás do conteúdo */
+}
+
+.detail-card-image-section {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  background-color: #f0f0f0; /* Fundo para a imagem */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2; /* Acima do elemento decorativo */
+}
+
+.detail-main-image {
+  width: 100%;
+  height: auto; /* Altura automática para manter proporção */
+  max-height: 450px; /* Altura máxima para imagens muito altas */
+  object-fit: cover; /* Cobre a área, cortando se necessário */
+  border-radius: 18px;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.detail-card-image-section:hover .detail-main-image {
+  transform: scale(1.05); /* Leve zoom na imagem no hover */
+}
+
+.detail-card-info-section {
+  padding-left: 20px; /* Espaço para o ícone decorativo se adicionado */
+  position: relative;
+  z-index: 2;
+}
+
+.detail-name {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.5em; /* Nome da espécie em destaque */
+  color: #1a5220;
+  font-weight: 900;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.detail-scientific-name {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.1em;
+  color: #555;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+}
+.detail-scientific-name .info-icon {
+  margin-right: 10px;
+  font-size: 1.2em;
+  color: #66bb6a;
+}
+.detail-scientific-name span {
+  font-weight: 600;
+  margin-right: 5px;
+  color: #333;
+}
+
+.detail-description-box {
+  background-color: #f8fdf8; /* Fundo suave para a descrição */
+  border-left: 5px solid #81c784; /* Linha verde lateral */
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.description-title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.3em;
+  color: #2e7d32;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.description-text {
+  font-family: "Poppins", sans-serif;
+  font-size: 1em;
+  color: #444;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+.detail-misc-info {
+  font-family: "Poppins", sans-serif;
+  font-size: 1em;
+  color: #555;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.detail-misc-info .info-icon {
+  margin-right: 10px;
+  font-size: 1.1em;
+  color: #66bb6a;
+}
+.detail-misc-info span {
+  font-weight: 600;
+  margin-right: 5px;
+  color: #333;
+}
+
+/* Botão "Ouvir Descrição" */
+.speak-button {
+  background: linear-gradient(45deg, #4caf50, #8bc34a); /* Gradiente vibrante */
+  color: #ffffff;
+  border: none;
+  border-radius: 30px;
+  padding: 15px 35px; /* Maior padding */
+  font-size: 1.1em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  display: inline-flex;
+  align-items: center;
+  margin-top: 30px; /* Espaço do conteúdo */
+}
+
+.speak-button:hover {
+  background: linear-gradient(45deg, #66bb6a, #9ccc65);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.speak-button .speak-icon {
+  margin-right: 12px;
+  font-size: 1.3em;
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 992px) {
+  .detail-card-wrapper {
+    grid-template-columns: 1fr; /* Uma coluna em tablets */
+    gap: 30px;
+    padding: 30px;
+  }
+  .detail-card-image-section {
+    max-width: 80%; /* Limita a largura da imagem em telas menores */
+    margin: 0 auto; /* Centraliza a imagem */
+  }
+  .detail-card-info-section {
+    padding-left: 0;
+    text-align: center; /* Centraliza o texto */
+  }
+  .detail-name,
+  .detail-scientific-name,
+  .detail-misc-info {
+    justify-content: center; /* Centraliza ícones e texto */
+  }
+  .biodiversity-detail-main-title {
+    font-size: 3.2em;
+    margin-bottom: 50px;
+  }
+  .biodiversity-detail-main-title .subtitle {
+    font-size: 0.35em;
+  }
+}
+
+@media (max-width: 768px) {
+  .biodiversity-detail-page-container {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  .container.content-section {
+    padding: 0 20px;
+  }
+  .detail-card-wrapper {
+    padding: 25px;
+  }
+  .detail-main-image {
+    max-height: 350px;
+  }
+  .detail-name {
+    font-size: 2em;
+  }
+  .detail-scientific-name,
+  .detail-misc-info {
+    font-size: 1em;
+  }
+  .description-text {
+    font-size: 0.95em;
+  }
+  .speak-button {
+    padding: 12px 30px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 576px) {
+  .biodiversity-detail-main-title {
+    font-size: 2.2em;
+    margin-bottom: 40px;
+    letter-spacing: 0;
+  }
+  .biodiversity-detail-main-title .subtitle {
+    font-size: 0.4em;
+  }
+  .detail-card-wrapper {
+    padding: 20px;
+    border-radius: 20px;
+  }
+  .detail-main-image {
+    max-height: 280px;
+  }
+  .detail-name {
+    font-size: 1.8em;
+  }
+  .detail-description-box {
+    padding: 15px;
+  }
+  .speak-button {
+    padding: 10px 25px;
+    font-size: 0.9em;
+  }
+  .speak-button .speak-icon {
+    font-size: 1.1em;
+  }
+}
+
+@media (max-width: 400px) {
+  .biodiversity-detail-main-title {
+    font-size: 1.8em;
+    padding: 0 5px;
+  }
+  .detail-card-wrapper::before {
+    /* Esconde o elemento decorativo em telas muito pequenas */
+    display: none;
+  }
+}

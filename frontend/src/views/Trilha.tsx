@@ -1,15 +1,22 @@
 import { useParams } from "react-router-dom";
-import "../css/TrilhaPage.css";
-import { useState, useEffect, useMemo } from "react";
-import { Ponto, Trilha } from "../types/Trilha";
-import { getAllData } from "../services/Api";
-import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
+import "../css/Trilha.css"; // Importa o CSS atualizado
+import { useState, useEffect, useMemo, useCallback } from "react"; // Adicionado useCallback
+import { Ponto, Trilha } from "../types/Trilha"; // Ajuste o caminho
+import { getAllData } from "../services/Api"; // Ajuste o caminho
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Circle,
+  useMap,
+} from "react-leaflet";
 import L from "leaflet";
 import { BsFillGeoFill, BsGeoAltFill } from "react-icons/bs";
 import ReactDOMServer from "react-dom/server";
-import { falarTexto } from "../functions/Fala";
+import { falarTexto } from "../functions/Fala"; // Ajuste o caminho
 import calcularDistancia from "../functions/Distancia";
-import { useMap } from "react-leaflet";
+import { FaMapMarkerAlt, FaClock, FaTags, FaTree } from "react-icons/fa"; // Ícones para os cards de info
 
 const RecenterMap = ({ center }: { center: [number, number] }) => {
   const map = useMap();
@@ -21,41 +28,46 @@ const RecenterMap = ({ center }: { center: [number, number] }) => {
   return null;
 };
 
-const TrilhaPage = () => {
+const TrilhaPage: React.FC = () => {
   const [usarPosicaoReal, setUsarPosicaoReal] = useState(true);
   const [usarPosicaoProxima, setUsarPosicaoProxima] = useState(false);
-  const [trilha, setTrilha] = useState<Trilha>();
+  const [trilha, setTrilha] = useState<Trilha | null>(null); // Pode ser null
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null
   );
   const [mapType, setMapType] = useState("satellite");
-  const [pontoAtual, setPontoAtual] = useState(1);
+  const [pontoAtualOrder, setPontoAtualOrder] = useState(1); // Renomeado para clareza
   const [visitados, setVisitados] = useState<number[]>([]);
-  const [mostrarPontoAtual, setMostrarPontoAtual] = useState(false);
+  const [mostrarPontoAtualInfo, setMostrarPontoAtualInfo] = useState(false); // Renomeado para clareza
   const [mapCenter, setMapCenter] = useState<[number, number] | null>(null);
 
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>(); // Tipar useParams
 
   useEffect(() => {
-    getAllData<Trilha>(`trilhas/${id}`).then((res) => {
-      if (res) setTrilha(res);
-    });
+    getAllData<Trilha>(`trilhas/${id}`)
+      .then((res: any) => {
+        if (res) setTrilha(res);
+        else console.error("Trilha não encontrada.");
+      })
+      .catch((err: any) => console.error("Erro ao buscar trilha:", err));
 
     if (usarPosicaoReal) {
       if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(
+        const watchId = navigator.geolocation.watchPosition(
           (pos) => {
             setUserLocation([pos.coords.latitude, pos.coords.longitude]);
           },
           (err) => console.warn("Erro ao obter localização:", err),
-          { enableHighAccuracy: true }
+          { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 } // Adicionar opções
         );
+        return () => navigator.geolocation.clearWatch(watchId); // Limpar watchPosition
       }
     } else {
+      // Posições fixas para teste
       if (usarPosicaoProxima) {
-        setUserLocation([-29.716781667616758, -53.729607756572]);
+        setUserLocation([-29.716781667616758, -53.729607756572]); // Próximo ao ponto 1
       } else {
-        setUserLocation([-29.716895283302495, -53.729593828291925]);
+        setUserLocation([-29.716895283302495, -53.729593828291925]); // Posição fixa inicial
       }
     }
   }, [id, usarPosicaoReal, usarPosicaoProxima]);
@@ -65,217 +77,161 @@ const TrilhaPage = () => {
     return [...trilha.pontos].sort((a, b) => a.order - b.order);
   }, [trilha?.pontos]);
 
-  useEffect(() => {
-    if (!userLocation || !trilha) return;
+  // Encontrar o ponto atual com base na ordem
+  const pontoAtualObj = useMemo(() => {
+    return pontosOrdenados.find((p) => p.order === pontoAtualOrder);
+  }, [pontosOrdenados, pontoAtualOrder]);
 
-    const ponto = pontosOrdenados.find((p) => p.order === pontoAtual);
-    if (!ponto) return;
+  const mostrarProximoPasso = useCallback(
+    (ponto: Ponto, distancia: number): string | null => {
+      if (
+        distancia > 3 &&
+        distancia <= 15 &&
+        ponto.guia &&
+        typeof ponto.guia.proximo_passo === "string"
+      ) {
+        return ponto.guia.proximo_passo;
+      }
+      return null;
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (!userLocation || !trilha || !pontoAtualObj) return;
 
     const distancia = calcularDistancia(
       userLocation[0],
       userLocation[1],
-      ponto.latitude,
-      ponto.longitude
+      pontoAtualObj.latitude,
+      pontoAtualObj.longitude
     );
 
-    console.log("Distancia:", distancia);
+    console.log(`Distância ao ponto ${pontoAtualObj.order}:`, distancia);
 
-    if (distancia <= 3 && !visitados.includes(ponto.order)) {
-      falarTexto(ponto.descricao);
-      falarTexto(ponto.guia.descricao);
-      setVisitados((prev) => [...prev, ponto.order]);
-      setMostrarPontoAtual(true);
+    if (distancia <= 3 && !visitados.includes(pontoAtualObj.order)) {
+      falarTexto(pontoAtualObj.descricao);
+      falarTexto(pontoAtualObj.guia.descricao);
+      setVisitados((prev) => [...prev, pontoAtualObj.order]);
+      setMostrarPontoAtualInfo(true); // Mostrar informações do ponto atual
     }
 
-    const msg = mostrarProximoPasso(ponto, distancia);
+    const msg = mostrarProximoPasso(pontoAtualObj, distancia);
     if (msg) {
       falarTexto(msg);
     }
-  }, [userLocation, pontoAtual, visitados, trilha, pontosOrdenados]);
-
-  function mostrarProximoPasso(ponto: Ponto, distancia: number): string | null {
-    console.log("Distancia:", distancia);
-    console.log("Guia:", ponto.guia);
-    console.log("Proximo Passo:", ponto.guia?.proximo_passo);
-    console.log("Tipo:", typeof ponto.guia?.proximo_passo);
-    if (
-      distancia > 3 &&
-      distancia <= 15 &&
-      ponto.guia &&
-      typeof ponto.guia.proximo_passo === "string"
-    ) {
-      return ponto.guia.proximo_passo;
-    }
-    return null;
-  }
+  }, [
+    userLocation,
+    pontoAtualOrder,
+    visitados,
+    trilha,
+    pontoAtualObj,
+    mostrarProximoPasso,
+  ]);
 
   const irParaProximoPonto = () => {
-    setPontoAtual((prev) => prev + 1);
-    setMostrarPontoAtual(false);
+    setPontoAtualOrder((prev) => prev + 1);
+    setMostrarPontoAtualInfo(false); // Esconder info do ponto atual ao ir para o próximo
   };
 
-  const centro: [number, number] = pontosOrdenados.length
-    ? [pontosOrdenados[0].latitude, pontosOrdenados[0].longitude]
-    : [-29.7, -53.7];
+  // Definir o centro inicial do mapa e atualizá-lo quando a localização do usuário estiver disponível
+  useEffect(() => {
+    if (userLocation && !mapCenter) {
+      setMapCenter(userLocation);
+    } else if (!userLocation && pontosOrdenados.length > 0) {
+      // Se não tem localização do usuário, centraliza no primeiro ponto da trilha
+      setMapCenter([pontosOrdenados[0].latitude, pontosOrdenados[0].longitude]);
+    }
+  }, [userLocation, mapCenter, pontosOrdenados]);
 
-  const ponto = pontosOrdenados.find((p) => p.order === pontoAtual);
-
-  if (!trilha) {
-    return (
+  const renderLoading = (message: string) => (
+    <div className="loading-state">
       <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "60vh" }}
-      >
-        <div
-          className="spinner-border"
-          role="status"
-          style={{ color: "#2e7d32" }}
-        />
-        <span className="ms-2 text-success">Carregando trilha...</span>
-      </div>
-    );
-  }
+        className="spinner-border"
+        role="status"
+        style={{ color: "#4CAF50" }}
+      />
+      <span className="ms-2 text-success">{message}</span>
+    </div>
+  );
 
-  if (!userLocation) {
-    return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "60vh" }}
-      >
-        <div
-          className="spinner-border"
-          role="status"
-          style={{ color: "#2e7d32" }}
-        />
-        <span className="ms-2 text-success">Carregando localização...</span>
-      </div>
-    );
-  }
-
-  if (!ponto) {
-    return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "60vh" }}
-      >
-        <div
-          className="spinner-border"
-          role="status"
-          style={{ color: "#2e7d32" }}
-        />
-        <span className="ms-2 text-success">Carregando pontos...</span>
-      </div>
-    );
-  }
-
-  if (!mapCenter) setMapCenter(userLocation);
+  if (!trilha) return renderLoading("Carregando trilha...");
+  if (!userLocation && usarPosicaoReal)
+    return renderLoading("Aguardando sua localização GPS...");
+  if (!pontoAtualObj && pontosOrdenados.length > 0)
+    return renderLoading("Carregando pontos da trilha...");
+  if (pontosOrdenados.length === 0)
+    return renderLoading("Nenhum ponto encontrado para esta trilha."); // Caso não haja pontos na trilha
 
   return (
-    <section
-      className="d-flex flex-column align-items-center"
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(to bottom, #f1f8e9, #c8e6c9)",
-        paddingTop: "60px",
-        paddingBottom: "60px",
-        paddingLeft: "15px",
-        paddingRight: "15px",
-      }}
-    >
-      <div className="container">
-        <h1
-          className="mb-4 text-center"
-          style={{ color: "#2e7d32", fontWeight: "700" }}
-        >
-          {trilha.nome}
-        </h1>
+    <section className="trilha-page-container">
+      <div className="container content-wrapper">
+        <h1 className="trilhas-main-title">{trilha.nome}</h1>
 
-        <div className="row g-3 mb-4">
-          {[
-            {
-              label: "Dificuldade",
-              value: trilha.dificuldade,
-            },
-            {
-              label: "Duração",
-              value: trilha.duracao,
-            },
-            {
-              label: "Tags",
-              value: trilha.tags.join(", "),
-            },
-          ].map(({ label, value }) => (
-            <div key={label} className="col-12 col-md-4">
-              <div
-                className="card shadow border-0 h-100"
-                style={{
-                  borderRadius: "16px",
-                  backgroundColor: "#ffffff",
-                }}
-              >
-                <div className="card-body text-center p-3">
-                  <h5
-                    className="card-title"
-                    style={{ color: "#2e7d32", fontWeight: "600" }}
-                  >
-                    {label}
-                  </h5>
-                  <p className="card-text text-muted mb-0">{value}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="info-cards-grid mb-5">
+          <div className="info-card">
+            <FaMapMarkerAlt className="info-icon" />
+            <h5 className="info-label">Dificuldade</h5>
+            <p className="info-value">{trilha.dificuldade}</p>
+          </div>
+          <div className="info-card">
+            <FaClock className="info-icon" />
+            <h5 className="info-label">Duração Estimada</h5>
+            <p className="info-value">{trilha.duracao}</p>
+          </div>
+          <div className="info-card">
+            <FaTags className="info-icon" />
+            <h5 className="info-label">Tags</h5>
+            <p className="info-value">{trilha.tags.join(", ")}</p>
+          </div>
         </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="mapTypeSelect"
-            className="form-label fw-bold"
-            style={{ color: "#2e7d32" }}
-          >
+        <div className="map-controls-section mb-4">
+          <label htmlFor="mapTypeSelect" className="form-label-custom">
             Tipo de mapa:
           </label>
           <select
             id="mapTypeSelect"
-            className="form-select"
+            className="form-select-custom"
             value={mapType}
             onChange={(e) => setMapType(e.target.value)}
-            style={{ borderRadius: "12px" }}
           >
             <option value="standard">Padrão</option>
             <option value="satellite">Satélite</option>
           </select>
         </div>
 
-        <div
-          className="mb-5"
-          style={{ borderRadius: "12px", overflow: "hidden" }}
-        >
+        <div className="map-container-wrapper mb-5">
           <MapContainer
-            center={centro}
+            center={mapCenter || [-29.716895, -53.729593]} // Fallback center
             zoom={17}
-            style={{ height: "400px", width: "100%" }}
+            className="leaflet-map-custom"
           >
             <TileLayer
               url={tileLayerUrls[mapType].url}
               attribution={tileLayerUrls[mapType].attribution}
             />
+
+            {/* Marcadores dos pontos da trilha */}
             {pontosOrdenados.map((ponto) => {
               const liberado =
-                visitados.includes(ponto.order) || ponto.order === pontoAtual;
+                visitados.includes(ponto.order) ||
+                ponto.order === pontoAtualOrder;
               return (
                 liberado && (
                   <Marker
                     key={ponto.id}
                     position={[ponto.latitude, ponto.longitude]}
                     icon={L.divIcon({
-                      className: "",
+                      className: "custom-marker-icon",
                       html: ReactDOMServer.renderToString(
                         <BsGeoAltFill
                           size={30}
                           color={
-                            ponto.order === pontoAtual ? "#2e7d32" : "#81c784"
-                          }
+                            ponto.order === pontoAtualOrder
+                              ? "#E91E63"
+                              : "#66BB6A"
+                          } // Rosa para ponto atual, verde para visitado
                         />
                       ),
                       iconSize: [30, 30],
@@ -283,25 +239,26 @@ const TrilhaPage = () => {
                     })}
                   >
                     <Popup>
-                      <strong>{ponto.descricao}</strong>
+                      <strong>
+                        Ponto {ponto.order}: {ponto.descricao}
+                      </strong>
                       <br />
-                      {ponto.guia.descricao}
-                      <br />
-                      <small>Ordem: {ponto.order}</small>
+                      Guia: {ponto.guia.descricao}
                     </Popup>
                   </Marker>
                 )
               );
             })}
 
+            {/* Marcador da localização do usuário */}
             {userLocation && (
               <>
                 <Marker
                   position={userLocation}
                   icon={L.divIcon({
-                    className: "",
+                    className: "user-location-marker",
                     html: ReactDOMServer.renderToString(
-                      <BsFillGeoFill size={30} color="#b03a2e" />
+                      <BsFillGeoFill size={30} color="#007bff" />
                     ),
                     iconSize: [30, 30],
                     iconAnchor: [15, 30],
@@ -311,67 +268,53 @@ const TrilhaPage = () => {
                 </Marker>
                 <Circle
                   center={userLocation}
-                  radius={2}
-                  pathOptions={{ color: "#b03a2e" }}
+                  radius={2} // Raio pequeno para precisão visual
+                  pathOptions={{ color: "#007bff", fillOpacity: 0.5 }} // Cor azul
                 />
               </>
             )}
 
-            <RecenterMap center={mapCenter || centro} />
+            {mapCenter && <RecenterMap center={mapCenter} />}
           </MapContainer>
         </div>
 
-        {mostrarPontoAtual && (
-          <div
-            className="alert alert-success text-center"
-            role="alert"
-            style={{
-              borderRadius: "12px",
-              fontWeight: "600",
-              backgroundColor: "#dcedc8",
-              color: "#33691e",
-            }}
-          >
-            <p>
-              Você está no ponto <strong>{pontoAtual}</strong>:{" "}
-              {ponto.descricao}
-            </p>
-            {ponto.imagem && (
-              <div className="d-flex justify-content-center mb-3">
+        {/* Informações do Ponto Atual e Botão Próximo */}
+        {mostrarPontoAtualInfo && pontoAtualObj && (
+          <div className="current-point-info-card status-message success-message">
+            <h3 className="point-title">
+              Você está no Ponto {pontoAtualObj.order}!
+            </h3>
+            <p className="point-description">{pontoAtualObj.descricao}</p>
+            {pontoAtualObj.imagem && (
+              <div className="point-image-wrapper">
                 <img
-                  src={ponto.imagem}
-                  alt={`Imagem do ponto ${ponto.order}`}
-                  className="img-fluid rounded" 
-                  style={{
-                    maxWidth: "300px",
-                    height: "auto",
-                  }}
+                  src={pontoAtualObj.imagem}
+                  alt={`Imagem do ponto ${pontoAtualObj.order}`}
+                  className="point-image"
                 />
               </div>
             )}
-            <button
-              className="btn btn-outline-success"
-              onClick={irParaProximoPonto}
-            >
-              Ir para próximo ponto
+            <button className="btn-next-point" onClick={irParaProximoPonto}>
+              Próximo Ponto <FaTree className="btn-icon" />
             </button>
           </div>
         )}
 
-        <button
-          onClick={() => {
-            if (userLocation) setMapCenter(userLocation);
-          }}
-          title="Centralizar mapa na minha localização"
-        >
-          Centralizar no meu local
-        </button>
-
-        <div className="d-flex justify-content-center gap-3 mt-3 flex-wrap">
+        <div className="map-action-buttons-group">
           <button
-            className={`btn btn-sm ${
-              usarPosicaoReal ? "btn-success" : "btn-outline-success"
-            }`}
+            className="action-button primary-action"
+            onClick={() => {
+              if (userLocation) setMapCenter(userLocation);
+            }}
+            title="Centralizar mapa na minha localização"
+          >
+            <BsFillGeoFill /> Centralizar no meu local
+          </button>
+        </div>
+
+        <div className="debug-buttons-group">
+          <button
+            className={`debug-button ${usarPosicaoReal ? "active" : ""}`}
             onClick={() => {
               setUsarPosicaoReal(true);
               setUsarPosicaoProxima(false);
@@ -380,10 +323,8 @@ const TrilhaPage = () => {
             Usar GPS real
           </button>
           <button
-            className={`btn btn-sm ${
-              !usarPosicaoReal && !usarPosicaoProxima
-                ? "btn-success"
-                : "btn-outline-success"
+            className={`debug-button ${
+              !usarPosicaoReal && !usarPosicaoProxima ? "active" : ""
             }`}
             onClick={() => {
               setUsarPosicaoReal(false);
@@ -393,9 +334,7 @@ const TrilhaPage = () => {
             Usar posição fixa
           </button>
           <button
-            className={`btn btn-sm ${
-              usarPosicaoProxima ? "btn-success" : "btn-outline-success"
-            }`}
+            className={`debug-button ${usarPosicaoProxima ? "active" : ""}`}
             onClick={() => {
               setUsarPosicaoProxima(true);
               setUsarPosicaoReal(false);
@@ -413,7 +352,7 @@ const tileLayerUrls: Record<string, { url: string; attribution: string }> = {
   standard: {
     url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     attribution:
-      '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+      '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
   },
   satellite: {
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",

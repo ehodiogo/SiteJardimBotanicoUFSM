@@ -1,80 +1,55 @@
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { getAllData } from "../services/Api";
-import { useState, useEffect } from "react";
 import { Trilha } from "../types/Trilha";
+import TrailCard from "../components/TrailCard";
+import "../css/TrilhaPage.css";
 
-const TrilhasJardimBotanico = () => {
-  const navigate = useNavigate();
+const TrilhasJardimBotanico: React.FC = () => {
   const [trilhas, setTrilhas] = useState<Trilha[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getAllData<Trilha[]>("trilhas").then((res) => {
-      if (res) setTrilhas(res);
-    });
+    const fetchTrilhas = async () => {
+      try {
+        setLoading(true);
+        const res = await getAllData<Trilha[]>("trilhas");
+        if (res) {
+          setTrilhas(res);
+        } else {
+          setError("Não foi possível carregar as trilhas.");
+        }
+      } catch (err) {
+        console.error("Erro ao buscar trilhas:", err);
+        setError("Ocorreu um erro ao carregar as trilhas.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTrilhas();
   }, []);
 
   return (
-    <section
-      className="d-flex align-items-start"
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(to bottom, #f1f8e9, #c8e6c9)",
-        paddingTop: "60px",
-        paddingBottom: "60px",
-      }}
-    >
+    <section className="trilhas-page-container">
       <div className="container">
-        <h1
-          className="text-center mb-5"
-          style={{ color: "#2e7d32", fontWeight: "700" }}
-        >
+        <h1 className="trilhas-main-title">
           Trilhas do Jardim Botânico da UFSM
         </h1>
+
+        {loading && <p className="loading-message">Carregando trilhas...</p>}
+        {error && <p className="error-message">{error}</p>}
+
+        {!loading && !error && trilhas.length === 0 && (
+          <p className="no-trails-message">
+            Nenhuma trilha disponível no momento.
+          </p>
+        )}
 
         <div className="row g-4 justify-content-center">
           {trilhas.map((trilha) => (
             <div className="col-12 col-sm-6 col-md-4 col-lg-3" key={trilha.id}>
-              <div
-                className="card h-100 shadow border-0"
-                style={{
-                  borderRadius: "16px",
-                  backgroundColor: "#ffffff",
-                  transition: "transform 0.2s",
-                }}
-              >
-                <div className="card-body d-flex flex-column">
-                  <h5
-                    className="card-title"
-                    style={{ color: "#2e7d32", fontWeight: "600" }}
-                  >
-                    🌿 {trilha.nome}
-                  </h5>
-
-                  <p className="text-muted small mb-2">
-                    <i className="bi bi-map"></i> {trilha.nome}
-                  </p>
-
-                  <p className="mb-1 small">
-                    <strong>Dificuldade:</strong> {trilha.dificuldade}
-                  </p>
-
-                  <p className="mb-3 small">
-                    <strong>Duração:</strong> {trilha.duracao}
-                  </p>
-
-                  <button
-                    className="btn mt-auto text-white"
-                    style={{
-                      backgroundColor: "#81c784",
-                      borderRadius: "50px",
-                      fontWeight: "500",
-                    }}
-                    onClick={() => navigate(`/trilha/${trilha.id}`)}
-                  >
-                    Ver Detalhes
-                  </button>
-                </div>
-              </div>
+              <TrailCard trilha={trilha} />
             </div>
           ))}
         </div>
