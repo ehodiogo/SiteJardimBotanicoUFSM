@@ -1,5 +1,5 @@
 import React from "react";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaGamepad } from "react-icons/fa";
 import {
   HiOutlineLocationMarker,
   HiOutlineMail,
@@ -33,6 +33,12 @@ const Footer: React.FC = () => {
                 className="text-light fs-4"
               >
                 <FaInstagram />
+              </a>
+              <a
+                href="https://www.roblox.com/games/79711828959896/Jardim-Bot-nico-UFSM#!/game-instances"
+                className="text-light fs-4"
+              >
+                <FaGamepad />
               </a>
             </div>
           </div>
