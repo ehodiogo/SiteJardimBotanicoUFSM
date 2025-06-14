@@ -5,3 +5,7 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.tag
+    
+    class Meta:
+        verbose_name = 'Tag das Trilhas e Amostras do Jardim Botânico'
+        verbose_name_plural = 'Tags das Trilhas e Amostras do Jardim Botânico'

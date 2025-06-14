@@ -10,5 +10,5 @@ class ConfiguracaoJB(models.Model):
         return f"{self.dia_semana} - {self.horario_abertura} - {self.horario_fechamento}"
 
     class Meta:
-        verbose_name = 'Configuração de horário'
-        verbose_name_plural = 'Configurações de horário'
+        verbose_name = 'Configuração de Horário de Funcionamento do Jardim Botânico'
+        verbose_name_plural = 'Configurações de Horário de Funcionamento do Jardim Botânico'

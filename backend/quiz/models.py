@@ -10,3 +10,7 @@ class QuizAmostra(models.Model):
 
     def __str__(self):
         return self.pergunta
+    
+    class Meta:
+        verbose_name = 'Pergunta do Quiz do Jardim Botânico'
+        verbose_name_plural = 'Perguntas do Quiz do Jardim Botânico'

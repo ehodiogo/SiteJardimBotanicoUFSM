@@ -7,3 +7,7 @@ class Presenca(models.Model):
 
     def __str__(self):
         return self.visitante
+    
+    class Meta:
+        verbose_name = 'Presença no Agendamento do Jardim Botânico'
+        verbose_name_plural = 'Presenças no Agendamento do Jardim Botânico'

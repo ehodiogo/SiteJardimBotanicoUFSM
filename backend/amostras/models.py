@@ -13,6 +13,10 @@ class DadosCientificos(models.Model):
 
     def __str__(self):
         return self.nome_cientifico
+    
+    class Meta:
+        verbose_name = 'Dados Científicos da Amostra'
+        verbose_name_plural = 'Dados Científicos das Amostras'
 
 class AmostraType(TextChoices):
     PLANTA = 'planta', 'Planta'
@@ -41,3 +45,7 @@ class Amostra(models.Model):
 
     def __str__(self):
         return f"{self.nome_popular or self.nome_cientifico} ({self.get_tipo_display()})"
+
+    class Meta:
+        verbose_name = 'Amostra do Jardim Botânico'
+        verbose_name_plural = 'Amostras do Jardim Botânico'

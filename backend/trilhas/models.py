@@ -19,7 +19,8 @@ class Ponto(models.Model):
         return f"{self.latitude}, {self.longitude}"
     
     class Meta:
-        verbose_name_plural = 'Pontos'
+        verbose_name = 'Ponto da Trilha do Jardim Botânico'
+        verbose_name_plural = 'Pontos da Trilha do Jardim Botânico'
     
 class GuiaTrilha(models.Model):
     descricao = models.TextField(blank=True, null=True)
@@ -29,7 +30,8 @@ class GuiaTrilha(models.Model):
         return self.descricao
     
     class Meta:
-        verbose_name_plural = 'Guias de Trilhas'
+        verbose_name = 'Guia de Trilha do Jardim Botânico'
+        verbose_name_plural = 'Guias de Trilhas do Jardim Botânico'
 
 
 class Trilha(models.Model):
@@ -45,4 +47,5 @@ class Trilha(models.Model):
         return self.nome
     
     class Meta:
-        verbose_name_plural = 'Trilhas'
+        verbose_name = 'Trilha Guiada do Jardim Botânico'
+        verbose_name_plural = 'Trilhas Guiadas do Jardim Botânico'

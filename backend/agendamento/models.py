@@ -70,3 +70,7 @@ class Agendamento(models.Model):
     # piqueniques
 
     piquenique = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'Agendamento do Jardim Botânico'
+        verbose_name_plural = 'Agendamentos do Jardim Botânico'
