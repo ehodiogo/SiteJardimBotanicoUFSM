@@ -44,13 +44,9 @@ const TrilhaPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Tipar useParams
 
   useEffect(() => {
-    getAllData<Trilha>(`trilhas/${id}`)
-      .then((res: any) => {
-        if (res) setTrilha(res);
-        else console.error("Trilha não encontrada.");
-      })
-      .catch((err: any) => console.error("Erro ao buscar trilha:", err));
-
+    getAllData<Trilha>(`trilhas/${id}`).then((res) => {
+      setTrilha(res);
+    })
     if (usarPosicaoReal) {
       if (navigator.geolocation) {
         const watchId = navigator.geolocation.watchPosition(

@@ -31,7 +31,7 @@ const BiodiversityDetail: React.FC = () => {
     dados.ultimaAtualizacao = new Date().toISOString();
 
     localStorage.setItem("amostrasAnalisadas", JSON.stringify(dados));
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
