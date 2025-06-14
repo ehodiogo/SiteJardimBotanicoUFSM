@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaCamera } from "react-icons/fa";
 import "../css/BotanicalSiteLayout.css";
 
-interface BotanicalSiteLayoutProps {}
+type BotanicalSiteLayoutProps = object
 
 const mascoteActualPath = "/Jerivaldo.png";
 

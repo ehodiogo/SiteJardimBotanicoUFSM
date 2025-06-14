@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Agendamento } from "../types/Agendamento";
+import { getAllData } from "../services/Api";
 
 interface StarProps {
   filled: boolean;
@@ -34,6 +36,21 @@ const Presenca = () => {
   const [avaliacao, setAvaliacao] = useState(0);
   const [enviado, setEnviado] = useState(false);
 
+  const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
+
+  useEffect(() => {
+    getAllData<Agendamento[]>("agendamentos-hoje").then((res) => {
+
+      if (res) {
+        setAgendamentos(res);        
+      } else {
+        console.error("Nenhum agendamento encontrado.");
+      }
+    });
+  }, []);
+
+  console.log("Agendamentos:", agendamentos);
+
   const handleEnviar = () => {
     if (nome.trim() && feedback.trim() && avaliacao > 0) {
       setEnviado(true);
@@ -47,6 +64,31 @@ const Presenca = () => {
       {!enviado ? (
         <div className="card shadow-sm p-4">
           <h4 className="mb-4 text-center text-success">Feedback do Passeio</h4>
+
+          <div className="mb-3">
+            <p>Selecione o passeio que deseja dar feedback:</p>
+
+            {agendamentos.map((agendamento) => (
+              <select
+                key={agendamento.id}
+                className="form-select"
+                value={agendamento.id}
+                onChange={(e) => {
+                  const selectedAgendamentoId = parseInt(e.target.value);
+                  const selectedAgendamento = agendamentos.find(
+                    (a) => a.id === selectedAgendamentoId
+                  );
+                  if (selectedAgendamento) {
+                    setAgendamentos([selectedAgendamento]);
+                  }
+                }}
+              >
+                <option value={agendamento.id}>
+                  {agendamento.data_agendamento} - {agendamento.nome_responsavel}
+                </option>
+              </select>
+            ))}
+          </div>
 
           <div className="mb-3">
             <label htmlFor="nome" className="form-label">
