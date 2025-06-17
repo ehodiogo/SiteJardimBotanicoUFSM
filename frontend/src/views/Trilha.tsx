@@ -180,6 +180,11 @@ const TrilhaPage: React.FC = () => {
             <h5 className="info-label">Tags</h5>
             <p className="info-value">{trilha.tags.join(", ")}</p>
           </div>
+          <div className="info-card">
+            <FaMapMarkerAlt className="info-icon" />
+            <h5 className="info-label">Quantia de Pontos de Parada</h5>
+            <p className="info-value">{trilha.pontos.length}</p>
+          </div>
         </div>
 
         <div className="map-controls-section mb-4">

@@ -7,7 +7,7 @@ class Ponto(models.Model):
     descricao = models.TextField(blank=True, null=True)
 
     # could have
-    guia = models.ForeignKey('GuiaTrilha', on_delete=models.SET_NULL, null=True)
+    guia = models.ForeignKey('GuiaTrilha', on_delete=models.SET_NULL, null=True, blank=True)
 
     # could have 
     order = models.IntegerField(blank=True, null=True)
@@ -16,7 +16,7 @@ class Ponto(models.Model):
     imagem = models.ImageField(upload_to='trilhas/', blank=True, null=True)
 
     def __str__(self):
-        return f"{self.latitude}, {self.longitude}"
+        return f"{self.latitude}, {self.longitude} - {self.descricao} - {self.guia} - {self.order}"
     
     class Meta:
         verbose_name = 'Ponto da Trilha do Jardim Botânico'
