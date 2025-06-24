@@ -115,7 +115,7 @@ const BiodiversityDetail: React.FC = () => {
         <div className="detail-card-wrapper">
           <div className="detail-card-image-section">
             <img
-              src={dado.imagem_url}
+              src={dado.imagem}
               alt={dado.nome_popular || dado.nome_cientifico}
               className="detail-main-image"
               onError={(e) => {
@@ -151,6 +151,55 @@ const BiodiversityDetail: React.FC = () => {
             >
               <FaMicrophone className="speak-icon" /> Ouvir Descrição
             </button>
+
+            {(dado.dados_cientificos.reino ||
+              dado.dados_cientificos.filo ||
+              dado.dados_cientificos.classe ||
+              dado.dados_cientificos.ordem ||
+              dado.dados_cientificos.familia ||
+              dado.dados_cientificos.genero ||
+              dado.dados_cientificos.especie) && (
+              <div className="detail-taxonomy-box">
+                <h3 className="taxonomy-title">Classificação Taxonômica:</h3>
+                <ul className="taxonomy-list">
+                  {dado.dados_cientificos.reino && (
+                    <li>
+                      <strong>Reino:</strong> {dado.dados_cientificos.reino}
+                    </li>
+                  )}
+                  {dado.dados_cientificos.filo && (
+                    <li>
+                      <strong>Filo:</strong> {dado.dados_cientificos.filo}
+                    </li>
+                  )}
+                  {dado.dados_cientificos.classe && (
+                    <li>
+                      <strong>Classe:</strong> {dado.dados_cientificos.classe}
+                    </li>
+                  )}
+                  {dado.dados_cientificos.ordem && (
+                    <li>
+                      <strong>Ordem:</strong> {dado.dados_cientificos.ordem}
+                    </li>
+                  )}
+                  {dado.dados_cientificos.familia && (
+                    <li>
+                      <strong>Família:</strong> {dado.dados_cientificos.familia}
+                    </li>
+                  )}
+                  {dado.dados_cientificos.genero && (
+                    <li>
+                      <strong>Gênero:</strong> {dado.dados_cientificos.genero}
+                    </li>
+                  )}
+                  {dado.dados_cientificos.especie && (
+                    <li>
+                      <strong>Espécie:</strong> {dado.dados_cientificos.especie}
+                    </li>
+                  )}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
-import "../css/Trilha.css"; // Importa o CSS atualizado
-import { useState, useEffect, useMemo, useCallback } from "react"; // Adicionado useCallback
-import { Ponto, Trilha } from "../types/Trilha"; // Ajuste o caminho
-import { getAllData } from "../services/Api"; // Ajuste o caminho
+import "../css/Trilha.css";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { Ponto, Trilha } from "../types/Trilha";
+import { getAllData } from "../services/Api";
 import {
   MapContainer,
   TileLayer,
@@ -14,9 +14,9 @@ import {
 import L from "leaflet";
 import { BsFillGeoFill, BsGeoAltFill } from "react-icons/bs";
 import ReactDOMServer from "react-dom/server";
-import { falarTexto } from "../functions/Fala"; // Ajuste o caminho
+import { falarTexto } from "../functions/Fala";
 import calcularDistancia from "../functions/Distancia";
-import { FaMapMarkerAlt, FaClock, FaTags, FaTree } from "react-icons/fa"; // Ícones para os cards de info
+import { FaMapMarkerAlt, FaClock, FaTags, FaTree } from "react-icons/fa";
 
 const RecenterMap = ({ center }: { center: [number, number] }) => {
   const map = useMap();
@@ -31,41 +31,49 @@ const RecenterMap = ({ center }: { center: [number, number] }) => {
 const TrilhaPage: React.FC = () => {
   const [usarPosicaoReal, setUsarPosicaoReal] = useState(true);
   const [usarPosicaoProxima, setUsarPosicaoProxima] = useState(false);
-  const [trilha, setTrilha] = useState<Trilha | null>(null); // Pode ser null
+  const [trilha, setTrilha] = useState<Trilha | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null
   );
   const [mapType, setMapType] = useState("satellite");
-  const [pontoAtualOrder, setPontoAtualOrder] = useState(1); // Renomeado para clareza
+  const [pontoAtualOrder, setPontoAtualOrder] = useState(1);
   const [visitados, setVisitados] = useState<number[]>([]);
-  const [mostrarPontoAtualInfo, setMostrarPontoAtualInfo] = useState(false); // Renomeado para clareza
+  const [mostrarPontoAtualInfo, setMostrarPontoAtualInfo] = useState(false);
   const [mapCenter, setMapCenter] = useState<[number, number] | null>(null);
 
-  const { id } = useParams<{ id: string }>(); // Tipar useParams
+  const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
+    let watchId: number;
+
     getAllData<Trilha>(`trilhas/${id}`).then((res) => {
       setTrilha(res);
-    })
-    if (usarPosicaoReal) {
-      if (navigator.geolocation) {
-        const watchId = navigator.geolocation.watchPosition(
-          (pos) => {
-            setUserLocation([pos.coords.latitude, pos.coords.longitude]);
-          },
-          (err) => console.warn("Erro ao obter localização:", err),
-          { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 } // Adicionar opções
-        );
-        return () => navigator.geolocation.clearWatch(watchId); // Limpar watchPosition
-      }
+    });
+
+    if (usarPosicaoReal && navigator.geolocation) {
+      watchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+        },
+        (err) => console.warn("Erro ao obter localização:", err),
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+      );
     } else {
-      // Posições fixas para teste
       if (usarPosicaoProxima) {
-        setUserLocation([-29.716781667616758, -53.729607756572]); // Próximo ao ponto 1
+        setUserLocation([-29.716781667616758, -53.729607756572]);
+        setUsarPosicaoProxima(!usarPosicaoProxima);
+        setUsarPosicaoReal(true);
       } else {
-        setUserLocation([-29.716895283302495, -53.729593828291925]); // Posição fixa inicial
+        setUserLocation([-29.716895283302495, -53.729593828291925]);
+        setUsarPosicaoReal(true);
       }
     }
+
+    return () => {
+      if (usarPosicaoReal && watchId !== undefined) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    };
   }, [id, usarPosicaoReal, usarPosicaoProxima]);
 
   const pontosOrdenados = useMemo(() => {
@@ -73,7 +81,6 @@ const TrilhaPage: React.FC = () => {
     return [...trilha.pontos].sort((a, b) => a.order - b.order);
   }, [trilha?.pontos]);
 
-  // Encontrar o ponto atual com base na ordem
   const pontoAtualObj = useMemo(() => {
     return pontosOrdenados.find((p) => p.order === pontoAtualOrder);
   }, [pontosOrdenados, pontoAtualOrder]);
@@ -109,7 +116,7 @@ const TrilhaPage: React.FC = () => {
       falarTexto(pontoAtualObj.descricao);
       falarTexto(pontoAtualObj.guia.descricao);
       setVisitados((prev) => [...prev, pontoAtualObj.order]);
-      setMostrarPontoAtualInfo(true); // Mostrar informações do ponto atual
+      setMostrarPontoAtualInfo(true);
     }
 
     const msg = mostrarProximoPasso(pontoAtualObj, distancia);
@@ -127,15 +134,13 @@ const TrilhaPage: React.FC = () => {
 
   const irParaProximoPonto = () => {
     setPontoAtualOrder((prev) => prev + 1);
-    setMostrarPontoAtualInfo(false); // Esconder info do ponto atual ao ir para o próximo
+    setMostrarPontoAtualInfo(false);
   };
 
-  // Definir o centro inicial do mapa e atualizá-lo quando a localização do usuário estiver disponível
   useEffect(() => {
     if (userLocation && !mapCenter) {
       setMapCenter(userLocation);
     } else if (!userLocation && pontosOrdenados.length > 0) {
-      // Se não tem localização do usuário, centraliza no primeiro ponto da trilha
       setMapCenter([pontosOrdenados[0].latitude, pontosOrdenados[0].longitude]);
     }
   }, [userLocation, mapCenter, pontosOrdenados]);
@@ -157,7 +162,7 @@ const TrilhaPage: React.FC = () => {
   if (!pontoAtualObj && pontosOrdenados.length > 0)
     return renderLoading("Carregando pontos da trilha...");
   if (pontosOrdenados.length === 0)
-    return renderLoading("Nenhum ponto encontrado para esta trilha."); // Caso não haja pontos na trilha
+    return renderLoading("Nenhum ponto encontrado para esta trilha.");
 
   return (
     <section className="trilha-page-container">
@@ -204,7 +209,7 @@ const TrilhaPage: React.FC = () => {
 
         <div className="map-container-wrapper mb-5">
           <MapContainer
-            center={mapCenter || [-29.716895, -53.729593]} // Fallback center
+            center={mapCenter || [-29.716895, -53.729593]}
             zoom={17}
             className="leaflet-map-custom"
           >
@@ -213,7 +218,6 @@ const TrilhaPage: React.FC = () => {
               attribution={tileLayerUrls[mapType].attribution}
             />
 
-            {/* Marcadores dos pontos da trilha */}
             {pontosOrdenados.map((ponto) => {
               const liberado =
                 visitados.includes(ponto.order) ||
@@ -232,7 +236,7 @@ const TrilhaPage: React.FC = () => {
                             ponto.order === pontoAtualOrder
                               ? "#E91E63"
                               : "#66BB6A"
-                          } // Rosa para ponto atual, verde para visitado
+                          }
                         />
                       ),
                       iconSize: [30, 30],
@@ -251,7 +255,6 @@ const TrilhaPage: React.FC = () => {
               );
             })}
 
-            {/* Marcador da localização do usuário */}
             {userLocation && (
               <>
                 <Marker
@@ -269,8 +272,8 @@ const TrilhaPage: React.FC = () => {
                 </Marker>
                 <Circle
                   center={userLocation}
-                  radius={2} // Raio pequeno para precisão visual
-                  pathOptions={{ color: "#007bff", fillOpacity: 0.5 }} // Cor azul
+                  radius={2}
+                  pathOptions={{ color: "#007bff", fillOpacity: 0.5 }}
                 />
               </>
             )}
@@ -279,7 +282,6 @@ const TrilhaPage: React.FC = () => {
           </MapContainer>
         </div>
 
-        {/* Informações do Ponto Atual e Botão Próximo */}
         {mostrarPontoAtualInfo && pontoAtualObj && (
           <div className="current-point-info-card status-message success-message">
             <h3 className="point-title">
