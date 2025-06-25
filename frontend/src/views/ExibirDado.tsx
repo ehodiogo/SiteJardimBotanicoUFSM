@@ -120,37 +120,8 @@ const BiodiversityDetail: React.FC = () => {
               className="detail-main-image"
               onError={(e) => {
                 e.currentTarget.src = "/placeholder-biodiversidade.jpg";
-              }} // Fallback
+              }}
             />
-          </div>
-          <div className="detail-card-info-section">
-            <h2 className="detail-name">
-              {dado.nome_popular || dado.nome_cientifico}
-            </h2>
-            {dado.nome_popular && (
-              <p className="detail-scientific-name">
-                <FaLeaf className="info-icon" />
-                <span>Nome Científico:</span> <em>{dado.nome_cientifico}</em>
-              </p>
-            )}
-            {dado.tipo && (
-              <p className="detail-misc-info">
-                <FaFlask className="info-icon" />
-                <span>Categoria:</span> {dado.tipo}
-              </p>
-            )}
-
-            <div className="detail-description-box">
-              <h3 className="description-title">Descrição:</h3>
-              <p className="description-text">{dado.descricao}</p>
-            </div>
-
-            <button
-              className="speak-button"
-              onClick={() => falarTexto(dado.descricao_acessivel)}
-            >
-              <FaMicrophone className="speak-icon" /> Ouvir Descrição
-            </button>
 
             {(dado.dados_cientificos.reino ||
               dado.dados_cientificos.filo ||
@@ -200,6 +171,35 @@ const BiodiversityDetail: React.FC = () => {
                 </ul>
               </div>
             )}
+          </div>
+          <div className="detail-card-info-section">
+            <h2 className="detail-name">
+              {dado.nome_popular || dado.nome_cientifico}
+            </h2>
+            {dado.nome_popular && (
+              <p className="detail-scientific-name">
+                <FaLeaf className="info-icon" />
+                <span>Nome Científico:</span> <em>{dado.nome_cientifico}</em>
+              </p>
+            )}
+            {dado.tipo && (
+              <p className="detail-misc-info">
+                <FaFlask className="info-icon" />
+                <span>Categoria:</span> {dado.tipo}
+              </p>
+            )}
+
+            <div className="detail-description-box">
+              <h3 className="description-title">Descrição:</h3>
+              <p className="description-text">{dado.descricao}</p>
+            </div>
+
+            <button
+              className="speak-button"
+              onClick={() => falarTexto(dado.descricao_acessivel)}
+            >
+              <FaMicrophone className="speak-icon" /> Ouvir Descrição
+            </button>
           </div>
         </div>
       </div>
