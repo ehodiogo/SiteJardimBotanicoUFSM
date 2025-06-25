@@ -25,16 +25,22 @@
 ## 🎯 Funcionalidades  
 
 ### 🔹 MVP  
-- Dados das plantas/fungos.  
-- Dados dos animais.  
+- Dados das plantas/fungos/animais.  
+- Listagem do acervo do JB
 - Possibilidade de acesso ao site com leitura de um QRCode direto pela câmera do celular.  
 
 ### ✨ Funcionalidades Diferenciais  
 - Geração facilitada de um QRCode para ser impresso.  
 - Facilidade de cadastro de novas plantas/fungos ou animais.  
-- X  
-- Y  
-- Z  
+- Agendamento facilitado
+- Busca de bolsistas com horário para o agendamento
+- Mapa do jardim botânico gamificado (Roblox)
+- Acessibilidade no passeio ao jardim botânico
+- Audiodescrição do acervo do jardim botânico
+- Quiz para os itens do acervo verificados
+- Presença facilitada para os visitantes
+- Trilhas guiadas 
+- Listagem de trilhas por tipos de trilha
 
 ## Requisitos
 
