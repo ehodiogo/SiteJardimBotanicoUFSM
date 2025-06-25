@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import TextChoices
+from bolsista.models import Bolsista
 
 class TiposInstituicao(TextChoices):
     publica_municipal = 'publica_municipal', 'Pública Municipal'
@@ -37,7 +38,7 @@ class AtividadesSecundarias(TextChoices):
     palestra_peconhentos = 'palestra_peconhentos', 'Palestra sobre prevenção de acidentes com animais peçonhentos - a partir de 9 anos'
 
 class Agendamento(models.Model):
-    
+
     email = models.EmailField()
     telefone = models.CharField(max_length=20)
     nome_escola_instituto = models.CharField(max_length=255)
@@ -48,7 +49,7 @@ class Agendamento(models.Model):
     nivel_instituicao = models.CharField(max_length=55, choices=NiveisInstituicao.choices, default=NiveisInstituicao.nao_escolar)
     ano_serie_semestre_turma = models.CharField(max_length=255, blank=True, null=True)
     numero_previsto_visitantes = models.CharField(max_length=255, blank=True, null=True)
-    
+
     data_agendamento = models.DateField()
     tempo_disponivel = models.TimeField()
     horario_pretendido = models.TimeField()
@@ -74,3 +75,12 @@ class Agendamento(models.Model):
     class Meta:
         verbose_name = 'Agendamento do Jardim Botânico'
         verbose_name_plural = 'Agendamentos do Jardim Botânico'
+
+    def buscar_bolsista(self):
+        dia_semana = self.data_agendamento.weekday()
+
+        return Bolsista.objects.filter(
+            horariobolsista__dia_semana=dia_semana,
+            horariobolsista__horario_inicio__lte=self.horario_pretendido,
+            horariobolsista__horario_fim__gte=self.horario_pretendido,
+        ).distinct()
