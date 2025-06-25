@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import TextChoices
-from bolsista.models import Bolsista
+from bolsista.models import Bolsista, HorarioBolsista
 
 class TiposInstituicao(TextChoices):
     publica_municipal = 'publica_municipal', 'Pública Municipal'
@@ -79,8 +79,22 @@ class Agendamento(models.Model):
     def buscar_bolsista(self):
         dia_semana = self.data_agendamento.weekday()
 
+        print("Bolsistas: ", Bolsista.objects.all())
+        print("Horarios do bolsista: ", HorarioBolsista.objects.filter(bolsista=1))
+
         return Bolsista.objects.filter(
             horariobolsista__dia_semana=dia_semana,
             horariobolsista__horario_inicio__lte=self.horario_pretendido,
             horariobolsista__horario_fim__gte=self.horario_pretendido,
         ).distinct()
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        bolsistas = self.buscar_bolsista()
+        print("Bolsistas disponíveis para o agendamento:")
+        if bolsistas.exists():
+            for b in bolsistas:
+                print(f"✅ {b.nome} ({b.matricula}) - {b.curso}")
+        else:
+            print("Nenhum bolsista disponível no horário selecionado.")
