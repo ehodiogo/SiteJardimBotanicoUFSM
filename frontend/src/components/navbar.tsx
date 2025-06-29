@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import logo from "/jardimbotanicoLogo.png";
 
 const Navbar = () => {
@@ -22,15 +22,19 @@ const Navbar = () => {
           zIndex: 1000,
         }}
       >
-        <div className="d-flex align-items-center gap-3 text-white">
+        <Link
+          to="/"
+          className="d-flex align-items-center gap-3 text-white text-decoration-none"
+        >
           <img
             src={logo}
             className="rounded-circle"
             style={{ width: "70px" }}
             alt="Logo"
           />
-          <h3 className="d-none d-lg-block">Jardim Botânico UFSM</h3>
-        </div>
+          <h3 className="d-none d-lg-block mb-0">Jardim Botânico UFSM</h3>
+        </Link>
+
         {/* Hamburguer para mobile */}
         <div className="d-lg-none">
           <button
@@ -49,6 +53,7 @@ const Navbar = () => {
             </svg>
           </button>
         </div>
+
         {/* Menu items */}
         <ul
           className={`navbar-nav d-none d-lg-flex flex-row gap-4 mb-0`}

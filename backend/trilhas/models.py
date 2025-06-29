@@ -21,7 +21,7 @@ class Ponto(models.Model):
     class Meta:
         verbose_name = 'Ponto da Trilha do Jardim Botânico'
         verbose_name_plural = 'Pontos da Trilha do Jardim Botânico'
-    
+
 class GuiaTrilha(models.Model):
     descricao = models.TextField(blank=True, null=True)
     proximo_passo = models.TextField(blank=True, null=True)
@@ -35,17 +35,24 @@ class GuiaTrilha(models.Model):
 
 
 class Trilha(models.Model):
+
+    DIFICULDADES = (
+        (1, "Fácil"),
+        (2, "Médio"),
+        (3, "Difícil")
+    )
     nome = models.CharField(max_length=150)
     pontos = models.ManyToManyField(Ponto)
-    duracao = models.CharField(max_length=50, blank=True, null=True)
-    dificuldade = models.PositiveSmallIntegerField(blank=True, null=True)
+    duracao = models.PositiveSmallIntegerField(blank=True, null=True)
+    dificuldade = models.PositiveSmallIntegerField(blank=True, null=True, choices=DIFICULDADES)
 
     # tags da trilha
     tags = models.ManyToManyField('tag.Tag')
 
     def __str__(self):
-        return self.nome
-    
+        dificuldade = dict(self.DIFICULDADES).get(self.dificuldade, "Desconhecido")
+        return f"{self.nome} - {dificuldade} + {self.duracao} minutos de trilha"
+
     class Meta:
         verbose_name = 'Trilha Guiada do Jardim Botânico'
         verbose_name_plural = 'Trilhas Guiadas do Jardim Botânico'

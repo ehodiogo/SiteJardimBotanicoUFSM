@@ -28,6 +28,33 @@ const RecenterMap = ({ center }: { center: [number, number] }) => {
   return null;
 };
 
+const getDificuldadeTexto = (nivel: number) => {
+  switch (nivel) {
+    case 1:
+      return "Fácil";
+    case 2:
+      return "Média";
+    case 3:
+      return "Difícil";
+    default:
+      return "Desconhecida";
+  }
+};
+
+const getDificuldadeCor = (nivel: number) => {
+  switch (nivel) {
+    case 1:
+      return "#66bb6a"; // Verde
+    case 2:
+      return "#ffa726"; // Laranja
+    case 3:
+      return "#ef5350"; // Vermelho
+    default:
+      return "#9e9e9e"; // Cinza (Desconhecida)
+  }
+};
+
+
 const TrilhaPage: React.FC = () => {
   const [usarPosicaoReal, setUsarPosicaoReal] = useState(true);
   const [usarPosicaoProxima, setUsarPosicaoProxima] = useState(false);
@@ -173,12 +200,20 @@ const TrilhaPage: React.FC = () => {
           <div className="info-card">
             <FaMapMarkerAlt className="info-icon" />
             <h5 className="info-label">Dificuldade</h5>
-            <p className="info-value">{trilha.dificuldade}</p>
+            <p
+              className="info-value"
+              style={{
+                color: getDificuldadeCor(trilha.dificuldade),
+                fontWeight: "bold",
+              }}
+            >
+              {getDificuldadeTexto(trilha.dificuldade)}
+            </p>
           </div>
           <div className="info-card">
             <FaClock className="info-icon" />
             <h5 className="info-label">Duração Estimada</h5>
-            <p className="info-value">{trilha.duracao}</p>
+            <p className="info-value">{trilha.duracao} minutos de trilha</p>
           </div>
           <div className="info-card">
             <FaTags className="info-icon" />
