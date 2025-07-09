@@ -1,5 +1,5 @@
 import GenericCrud from "../components/GenericCrud";
-import { SchemaField } from "../functions/SchemaField";
+import SchemaField from "../functions/SchemaField";
 import QuizAmostra from "../types/QuizAmostra";
 
 const quizSchema: readonly SchemaField<QuizAmostra>[] = [

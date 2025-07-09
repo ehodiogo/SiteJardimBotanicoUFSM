@@ -39,7 +39,7 @@ const BiodiversityCard: React.FC<BiodiversityCardProps> = ({
         )}
         <button
           className="biodiversity-card-button"
-          onClick={(e) => {
+          onClick={() => {
             navigate(`/biodiversidade/${amostra.id}`);
           }}
         >
