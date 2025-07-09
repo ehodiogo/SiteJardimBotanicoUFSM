@@ -1,51 +1,16 @@
+version: '3.9'
+
 services:
-  django:
+  web:
     build:
-      context: ./backend
-      dockerfile: Dockerfile 
-    volumes:
-      - ./backend:/app
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_frontend_app
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
     ports:
-      - "8001:8000"
-    depends_on:
-      - jb-p1-db 
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ./backend/db.sqlite3:/app/backend/db.sqlite3
     env_file:
-      - .env 
-    environment:
-      - SERVICE=backend
-    command: ["bash", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
-    networks:
-      - backend
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile  
-    ports:
-      - "3000:3000"
-    environment:
-      - SERVICE=frontend
-    command: ["npm", "run", "dev"]
-    networks:
-      - backend
-
-  jb-p1-db:
-    image: postgres:14-alpine
-    container_name: jb-p1-db-1
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_PORT: ${DB_PORT}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data  
-    networks:
-      - backend
-
-volumes:
-  postgres_data:  
-  redis_data:
-
-networks:
-  backend:
-    driver: bridge 
+      - .env
