@@ -31,7 +31,7 @@ export default function TelaAmostra() {
     <div>
       <GenericCrud<Amostra>
         entityName="Amostra"
-        apiUrl="http://127.0.0.1:8000/api/amostras/"
+        apiUrl="http://sitejardimbotanicoufsm-backend.onrender.com/api/amostras/"
         schema={amostraSchema}
         displayField={(item) =>
           `${item.nome_popular} - ${item.nome_cientifico}`

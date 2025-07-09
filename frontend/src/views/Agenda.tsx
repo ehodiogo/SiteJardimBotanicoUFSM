@@ -12,7 +12,9 @@ const Agenda: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get<Agendamento[]>("http://127.0.0.1:8000/api/agendamentos")
+      .get<Agendamento[]>(
+        "http://sitejardimbotanicoufsm-backend.onrender.com/api/agendamentos"
+      )
       .then((response) => setAgendamentos(response.data))
       .catch((error) => console.error("Erro ao buscar agendamentos:", error));
   }, []);

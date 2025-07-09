@@ -17,7 +17,7 @@ export default function TelaAmostra() {
     <div>
       <GenericCrud<Ponto>
         entityName="Ponto"
-        apiUrl="http://127.0.0.1:8000/api/ponto/"
+        apiUrl="http://sitejardimbotanicoufsm-backend.onrender.com/api/ponto/"
         schema={pontoSchema}
       />
     </div>

@@ -15,7 +15,7 @@ export default function TelaAmostra() {
     <div>
       <GenericCrud<Trilha>
         entityName="Trilhas"
-        apiUrl="http://127.0.0.1:8000/api/trilhas/"
+        apiUrl="http://sitejardimbotanicoufsm-backend.onrender.com/api/trilhas/"
         schema={trilhaSchema}
       />
     </div>

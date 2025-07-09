@@ -16,7 +16,7 @@ export default function TelaAmostra() {
     <div>
       <GenericCrud<Bolsista>
         entityName="Bolsista"
-        apiUrl="http://127.0.0.1:8000/api/bolsistas/"
+        apiUrl="http://sitejardimbotanicoufsm-backend.onrender.com/api/bolsistas/"
         schema={bolsistaSchema}
         displayField={(item) =>
           `${item.nome} - ${item.matricula} - ${item.curso}`

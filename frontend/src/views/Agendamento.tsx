@@ -56,13 +56,16 @@ const AgendamentoForm = () => {
     e.preventDefault();
     console.log("Enviar dados:", formData);
 
-    fetch("http://127.0.0.1:8000/api/agendamentos/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
+    fetch(
+      "http://sitejardimbotanicoufsm-backend.onrender.com/api/agendamentos/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    )
       .then((response) => response.json())
       .then((data) => console.log(data))
       .catch((error) => console.error("Erro ao enviar dados:", error));

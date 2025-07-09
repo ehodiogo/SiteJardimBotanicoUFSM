@@ -31,7 +31,7 @@ export default function TelaAgendamento() {
     <div>
       <GenericCrud<Agendamento>
         entityName="Agendamento"
-        apiUrl="http://127.0.0.1:8000/api/agendamentos/"
+        apiUrl="http://sitejardimbotanicoufsm-backend.onrender.com/api/agendamentos/"
         schema={agendamentoSchema}
         displayField={(item) =>
           `${item.nome_responsavel} - ${item.data_agendamento}`
