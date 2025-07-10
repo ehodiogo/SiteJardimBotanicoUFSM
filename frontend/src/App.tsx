@@ -16,6 +16,7 @@ const Presenca = lazy(() => import("./views/Presenca"));
 const AdminPage = lazy(() => import("./views/Admin"));
 const Agendamento = lazy(() => import("./views/Agendamento"));
 const Agenda = lazy(() => import("./views/Agenda"));
+const UnityPage = lazy(() => import("./views/UnityPage"));
 
 const App: React.FC = () => {
   return (
@@ -33,6 +34,7 @@ const App: React.FC = () => {
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/presenca" element={<Presenca />} />
+          <Route path="/unity" element={<UnityPage />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
