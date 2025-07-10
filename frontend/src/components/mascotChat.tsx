@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaSyncAlt } from "react-icons/fa";
 import "../css/BotanicalSiteLayout.css";
 
 type BotanicalSiteLayoutProps = object;
@@ -18,48 +18,86 @@ const welcomeDescription =
 const BotanicalSiteLayout: React.FC<BotanicalSiteLayoutProps> = () => {
   const [showCamera, setShowCamera] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
+  const [facingMode, setFacingMode] = useState<"user" | "environment">(
+    "environment"
+  );
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  useEffect(() => {
+    if (isMobile) return; 
+
+    async function getVideoDevices() {
+      try {
+        const allDevices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = allDevices.filter(
+          (device) => device.kind === "videoinput"
+        );
+        setDevices(videoDevices);
+        if (videoDevices.length > 0 && !selectedDeviceId) {
+          setSelectedDeviceId(videoDevices[0].deviceId);
+        }
+      } catch (error) {
+        setCameraError("Erro ao listar dispositivos de vídeo.");
+        console.error(error);
+      }
+    }
+    getVideoDevices();
+  }, [selectedDeviceId, isMobile]);
 
   useEffect(() => {
     const startCamera = async () => {
       setCameraError(null);
-      if (!showCamera) return;
 
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-          });
-          streamRef.current = stream;
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-            await videoRef.current.play();
-            console.log("Câmera iniciada");
-          }
-        } catch (err: unknown) {
-          console.error("Erro ao acessar a câmera:", err);
-          if (err instanceof Error) {
-            if (err.name === "NotAllowedError") {
-              setCameraError(
-                "Você negou a permissão para acessar a câmera. Por favor, habilite nas configurações do seu navegador."
-              );
-            } else if (err.name === "NotFoundError") {
-              setCameraError(
-                "Nenhuma câmera foi encontrada no seu dispositivo."
-              );
-            } else {
-              setCameraError(`Erro ao acessar a câmera: ${err.message}`);
-            }
-          } else {
-            setCameraError(
-              "Ocorreu um erro desconhecido ao tentar acessar a câmera."
-            );
-          }
-          setShowCamera(false);
+      if (!showCamera) {
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach((track) => track.stop());
+          streamRef.current = null;
+          console.log("Câmera parada");
         }
-      } else {
-        setCameraError("Seu navegador não suporta acesso à câmera.");
+        return;
+      }
+
+      const constraints = isMobile
+        ? { video: { facingMode } }
+        : selectedDeviceId
+        ? { video: { deviceId: { exact: selectedDeviceId } } }
+        : { video: true };
+
+      try {
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach((track) => track.stop());
+          streamRef.current = null;
+        }
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        streamRef.current = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          await videoRef.current.play();
+          console.log("Câmera iniciada");
+        }
+      } catch (err: unknown) {
+        console.error("Erro ao acessar a câmera:", err);
+        if (err instanceof Error) {
+          if (err.name === "NotAllowedError") {
+            setCameraError(
+              "Você negou a permissão para acessar a câmera. Por favor, habilite nas configurações do seu navegador."
+            );
+          } else if (err.name === "NotFoundError") {
+            setCameraError("Nenhuma câmera foi encontrada no seu dispositivo.");
+          } else {
+            setCameraError(`Erro ao acessar a câmera: ${err.message}`);
+          }
+        } else {
+          setCameraError(
+            "Ocorreu um erro desconhecido ao tentar acessar a câmera."
+          );
+        }
         setShowCamera(false);
       }
     };
@@ -73,7 +111,21 @@ const BotanicalSiteLayout: React.FC<BotanicalSiteLayoutProps> = () => {
         console.log("Câmera parada");
       }
     };
-  }, [showCamera]);
+  }, [showCamera, selectedDeviceId, facingMode, isMobile]);
+
+  const switchCamera = () => {
+    if (isMobile) {
+      setFacingMode((prev) => (prev === "user" ? "environment" : "user"));
+    } else {
+      if (devices.length < 2) return;
+
+      const currentIndex = devices.findIndex(
+        (device) => device.deviceId === selectedDeviceId
+      );
+      const nextIndex = (currentIndex + 1) % devices.length;
+      setSelectedDeviceId(devices[nextIndex].deviceId);
+    }
+  };
 
   return (
     <div className="botanical-site-background">
@@ -98,6 +150,7 @@ const BotanicalSiteLayout: React.FC<BotanicalSiteLayoutProps> = () => {
             {!showCamera && (
               <p className="camera-prompt">{currentCameraPrompt}</p>
             )}
+
             <button
               className="qr-scan-button"
               onClick={() => setShowCamera((prev) => !prev)}
@@ -108,7 +161,10 @@ const BotanicalSiteLayout: React.FC<BotanicalSiteLayoutProps> = () => {
           </div>
 
           {showCamera && (
-            <div className="camera-view-container-themed">
+            <div
+              className="camera-view-container-themed"
+              style={{ position: "relative" }}
+            >
               <video
                 ref={videoRef}
                 autoPlay
@@ -116,8 +172,36 @@ const BotanicalSiteLayout: React.FC<BotanicalSiteLayoutProps> = () => {
                 muted
                 style={{ width: "100%", borderRadius: 10 }}
               />
+
+              {(devices.length > 1 || isMobile) && (
+                <button
+                  onClick={switchCamera}
+                  style={{
+                    position: "absolute",
+                    bottom: 10,
+                    right: 10,
+                    padding: "8px 12px",
+                    borderRadius: "25px",
+                    border: "none",
+                    backgroundColor: "#3a5a40",
+                    color: "#fff",
+                    cursor: "pointer",
+                    boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    fontWeight: "600",
+                  }}
+                  aria-label="Trocar câmera"
+                  title="Trocar câmera"
+                >
+                  <FaSyncAlt />
+                  Trocar câmera
+                </button>
+              )}
             </div>
           )}
+
           {cameraError && (
             <div className="error-message-themed" role="alert">
               {cameraError}
