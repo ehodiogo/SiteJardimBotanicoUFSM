@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaCamera } from "react-icons/fa";
 import "../css/BotanicalSiteLayout.css";
 
-type BotanicalSiteLayoutProps = object
+type BotanicalSiteLayoutProps = object;
 
 const mascoteActualPath = "/Jerivaldo.png";
 
@@ -16,64 +16,64 @@ const welcomeDescription =
   "O nosso espaço busca proporcionar aos visitantes contato com a natureza atrelado ao conhecimento. O jardim oferece visitas guiadas, tour pelas plantas carnívoras, passeio pelo telhado verde, visita ao jardim sensorial, exposição de animais taxidermizados e muito mais!";
 
 const BotanicalSiteLayout: React.FC<BotanicalSiteLayoutProps> = () => {
-  const [showCamera, setShowCamera] = useState<boolean>(false);
+  const [showCamera, setShowCamera] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  const handleOpenCamera = async () => {
-    setCameraError(null);
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        streamRef.current = stream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-        setShowCamera(true);
-      } catch (err: unknown) {
-        // Usar 'unknown' para capturar erros de qualquer tipo
-        console.error("Erro ao acessar a câmera:", err);
-        if (err instanceof Error) {
-          if (err.name === "NotAllowedError") {
-            setCameraError(
-              "Você negou a permissão para acessar a câmera. Por favor, habilite nas configurações do seu navegador."
-            );
-          } else if (err.name === "NotFoundError") {
-            setCameraError("Nenhuma câmera foi encontrada no seu dispositivo.");
-          } else {
-            setCameraError(`Erro ao acessar a câmera: ${err.message}`);
+  useEffect(() => {
+    const startCamera = async () => {
+      setCameraError(null);
+      if (!showCamera) return;
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+          });
+          streamRef.current = stream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            await videoRef.current.play();
+            console.log("Câmera iniciada");
           }
-        } else {
-          setCameraError(
-            "Ocorreu um erro desconhecido ao tentar acessar a câmera."
-          );
+        } catch (err: unknown) {
+          console.error("Erro ao acessar a câmera:", err);
+          if (err instanceof Error) {
+            if (err.name === "NotAllowedError") {
+              setCameraError(
+                "Você negou a permissão para acessar a câmera. Por favor, habilite nas configurações do seu navegador."
+              );
+            } else if (err.name === "NotFoundError") {
+              setCameraError(
+                "Nenhuma câmera foi encontrada no seu dispositivo."
+              );
+            } else {
+              setCameraError(`Erro ao acessar a câmera: ${err.message}`);
+            }
+          } else {
+            setCameraError(
+              "Ocorreu um erro desconhecido ao tentar acessar a câmera."
+            );
+          }
+          setShowCamera(false);
         }
+      } else {
+        setCameraError("Seu navegador não suporta acesso à câmera.");
         setShowCamera(false);
       }
-    } else {
-      setCameraError("Seu navegador não suporta acesso à câmera.");
-      setShowCamera(false);
-    }
-  };
+    };
 
-  const handleCloseCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-    }
-    setShowCamera(false);
-    setCameraError(null);
-  };
+    startCamera();
 
-  useEffect(() => {
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop());
+        streamRef.current = null;
+        console.log("Câmera parada");
       }
     };
-  }, []);
+  }, [showCamera]);
 
   return (
     <div className="botanical-site-background">
@@ -100,7 +100,7 @@ const BotanicalSiteLayout: React.FC<BotanicalSiteLayoutProps> = () => {
             )}
             <button
               className="qr-scan-button"
-              onClick={!showCamera ? handleOpenCamera : handleCloseCamera}
+              onClick={() => setShowCamera((prev) => !prev)}
             >
               <FaCamera />
               <span>{showCamera ? "Fechar Câmera" : "Ativar Câmera"}</span>
@@ -109,7 +109,13 @@ const BotanicalSiteLayout: React.FC<BotanicalSiteLayoutProps> = () => {
 
           {showCamera && (
             <div className="camera-view-container-themed">
-              <video ref={videoRef} autoPlay playsInline muted />
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                style={{ width: "100%", borderRadius: 10 }}
+              />
             </div>
           )}
           {cameraError && (
