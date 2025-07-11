@@ -1,0 +1,66 @@
+.acesse-mapa-section {
+  background-color: #fff;
+  padding: 50px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.acesse-mapa-container {
+  max-width: 1100px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.acesse-mapa-esquerda {
+  flex: 1;
+  text-align: center;
+}
+
+.acesse-mapa-botao {
+  display: inline-block;
+  background-color: #2e7d32;
+  color: white;
+  padding: 16px 32px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.acesse-mapa-botao:hover {
+  background-color: #1b5e20;
+}
+
+.acesse-mapa-direita {
+  flex: 2;
+  color: #2e7d32;
+}
+
+.acesse-mapa-direita h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.acesse-mapa-direita p {
+  font-size: 1.1rem;
+  color: #555;
+  max-width: 600px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .acesse-mapa-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .acesse-mapa-direita,
+  .acesse-mapa-esquerda {
+    flex: unset;
+  }
+}
